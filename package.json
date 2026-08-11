@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "start": "serve -s dist -l ${PORT:-8080}"
+    "start": "serve -s dist -l ${PORT:-8080}",
+    "deploy:pages": "npm run build && cd dist && git init -q -b gh-pages && git add -A && git commit -qm 'pages build' && git push -qf https://github.com/rishlion/fieldnotes.git gh-pages && cd .. && rm -rf dist/.git"
   },
   "devDependencies": {
     "typescript": "^7.0.2",
