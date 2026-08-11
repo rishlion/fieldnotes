@@ -1,0 +1,265 @@
+/* FIELDNOTES — Inked Atlas UI */
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden}
+body{font-family:"Iowan Old Style",Palatino,Georgia,serif;background:#d8c9a4;color:#4a3826;
+  -webkit-user-select:none;user-select:none}
+#stage{position:fixed;inset:0}
+canvas{display:block;width:100%;height:100%;
+  cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'><path d='M3 23 L6 17 C8 11 14 5 22 3 C20 10 15 18 9 20 L6 20 Z' fill='%23f3ead0' stroke='%234a3826' stroke-width='1.6' stroke-linejoin='round'/><path d='M3 23 L7 19' stroke='%234a3826' stroke-width='1.6' stroke-linecap='round'/></svg>") 3 23, crosshair}
+
+#overlay{position:fixed;inset:0;pointer-events:none;z-index:10}
+#overlay button{pointer-events:auto;cursor:pointer;font-family:inherit}
+
+/* ---------- title page ---------- */
+#title-screen{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;
+  background:rgba(236,223,192,.72);transition:opacity .7s}
+#title-screen.hidden{opacity:0;pointer-events:none}
+.t-inner{text-align:center;transform:translateY(-4vh)}
+.t-word{font-size:clamp(44px,7vw,76px);letter-spacing:.22em;color:#3f2f1c;text-indent:.22em;
+  opacity:0;animation:tIn 1.1s .2s forwards}
+.t-sub{font-size:13px;letter-spacing:.3em;text-transform:uppercase;color:#6b5a3e;margin-top:10px;
+  opacity:0;animation:tIn .9s .9s forwards}
+.t-ledger{font-style:italic;font-size:13.5px;color:#6b5a3e;margin-top:26px;min-height:1.2em;
+  opacity:0;animation:tIn .9s 1.4s forwards}
+#t-begin{margin-top:30px;font-size:15px;letter-spacing:.08em;color:#f2e6c8;font-family:inherit;cursor:pointer;
+  background:linear-gradient(170deg,#a13a2b,#7c241a);border:1px solid #5e1810;border-radius:4px;padding:13px 34px;
+  box-shadow:0 3px 8px rgba(60,20,10,.35), inset 0 1px 0 rgba(255,220,200,.25);
+  opacity:0;animation:tIn .9s 1.9s forwards}
+#t-begin:hover{background:linear-gradient(170deg,#b04432,#8c2b1e)}
+.t-foot{position:absolute;bottom:34px;left:0;right:0;text-align:center;
+  font-size:9.5px;letter-spacing:.28em;text-transform:uppercase;color:rgba(122,101,68,.75);
+  opacity:0;animation:tIn 1.2s 2.4s forwards}
+@keyframes tIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+/* the shared seed: one island, once, for everyone */
+#t-daily{display:block;margin:14px auto 0;font-size:12.5px;letter-spacing:.06em;color:#5a4632;
+  font-family:inherit;cursor:pointer;font-style:italic;
+  background:rgba(255,250,235,.55);border:1px dashed rgba(140,47,34,.5);border-radius:3px;padding:9px 20px;
+  opacity:0;animation:tIn .9s 2.2s forwards}
+#t-daily:hover{background:#f2e6c4}
+#t-daily.played{cursor:default;border-style:solid;border-color:rgba(90,70,40,.4);color:#7a6544;background:none}
+
+/* ---------- the cairn's cache: take one of two ---------- */
+#choice-panel{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%) rotate(-.4deg);
+  text-align:center;padding:18px 26px 16px;pointer-events:auto;
+  background:linear-gradient(168deg,rgba(246,236,209,.97),rgba(233,220,190,.95));
+  border:1.5px solid rgba(140,47,34,.55);border-radius:4px;
+  box-shadow:0 8px 30px rgba(50,32,14,.4), inset 0 0 0 4px rgba(255,250,235,.5)}
+#choice-panel.hidden{display:none}
+.choice-kicker{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#7a6544;margin-bottom:12px}
+#choice-cards{display:flex;gap:14px;justify-content:center}
+.choice-card{width:118px;border-radius:10px;cursor:pointer;padding:12px 10px 10px;text-align:center;
+  background:linear-gradient(160deg,#efe3c6,#e2d2a9);border:1px solid #b39c6f;color:#45361c;
+  box-shadow:0 4px 10px rgba(50,35,15,.3), inset 0 0 0 3px rgba(255,250,235,.5);
+  transition:transform .18s, box-shadow .18s}
+.choice-card:hover{transform:translateY(-4px) scale(1.04);
+  box-shadow:0 8px 16px rgba(50,35,15,.4), 0 0 0 2px #8c2f22, inset 0 0 0 3px rgba(255,250,235,.5)}
+.choice-card svg{width:36px;height:36px;margin:4px 0;color:#5a4327}
+.choice-card .nm{font-size:14px;font-weight:700;letter-spacing:.04em}
+.choice-card .fx{font-size:10.2px;line-height:1.3;margin-top:5px;opacity:.8}
+#choice-skip{margin-top:12px;font-size:11.5px;font-style:italic;color:#8a7550;
+  background:none;border:none;text-decoration:underline dashed rgba(138,117,80,.6);padding:2px 6px}
+#choice-skip:hover{color:#8c2f22}
+
+/* while the ship is still coming in, the instruments stay in the satchel */
+body.arriving #topleft,body.arriving #title,body.arriving #hand,
+body.arriving #hint,body.arriving #toasts,body.arriving #mnotes{opacity:0;pointer-events:none;transition:opacity .6s}
+
+/* ---------- ledger chips ---------- */
+/* hud and commission stack in one flow column so wrapped chips push the
+   commission down instead of overlapping it */
+#topleft{position:absolute;top:16px;left:18px;display:flex;flex-direction:column;gap:10px;align-items:flex-start;max-width:56vw}
+#hud{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.chip{display:flex;align-items:center;gap:6px;font-size:13.5px;padding:6px 12px;white-space:nowrap;
+  background:
+    linear-gradient(168deg,rgba(246,236,209,.92),rgba(233,220,190,.9));
+  border:1px solid rgba(90,70,40,.45);border-radius:3px;
+  box-shadow:0 2px 4px rgba(60,40,20,.18), inset 0 0 0 1px rgba(255,250,235,.4);
+  color:#4a3826}
+.chip:nth-child(odd){transform:rotate(-.7deg)}
+.chip:nth-child(even){transform:rotate(.5deg)}
+.chip svg{width:15px;height:15px;flex:none;color:#6b5535}
+.chip b{font-weight:700;font-variant-numeric:tabular-nums}
+.chip .lbl{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#7a6544;margin-left:1px}
+.chip i{font-size:11px;color:#8c2f22;font-style:italic}
+#chip-day{font-style:italic}
+.chip.flash{animation:chipflash .5s}
+@keyframes chipflash{30%{background:#f8ecc0;transform:scale(1.09)}}
+.chip.low{border-color:#8c2f22;color:#8c2f22;animation:lowpulse 1.6s infinite}
+.chip.low svg{color:#8c2f22}
+.chip.low .lbl{color:#8c2f22}
+@keyframes lowpulse{50%{box-shadow:0 2px 4px rgba(60,40,20,.18), 0 0 10px rgba(140,47,34,.5)}}
+#chip-wind svg{transition:transform .6s cubic-bezier(.3,1.4,.4,1)}
+#chip-wind.gust{border-color:#8c2f22}
+#chip-wind.gust svg{color:#8c2f22}
+
+/* ---------- the commission ---------- */
+#contract{max-width:238px;padding:9px 13px 10px;
+  background:linear-gradient(168deg,rgba(246,236,209,.9),rgba(233,220,190,.88));
+  border:1px solid rgba(90,70,40,.45);border-radius:3px;transform:rotate(-.5deg);
+  box-shadow:0 2px 5px rgba(60,40,20,.18)}
+#contract b{display:block;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#7a6544;margin-bottom:4px}
+#contract ul{list-style:none}
+#contract li{font-size:12px;line-height:1.5;color:#4a3826;display:flex;gap:7px;align-items:baseline}
+#contract li .box{font-size:11px;color:#8a7550}
+#contract li.met{color:#8c2f22}
+#contract li.met .box{color:#8c2f22;font-weight:700}
+#contract li.failed{opacity:.55;text-decoration:line-through}
+#contract li .prog{margin-left:auto;font-size:10.5px;color:#8a7550;font-variant-numeric:tabular-nums}
+#contract li.flash{animation:chipflash .6s}
+
+/* ---------- title block ---------- */
+#title{position:absolute;top:14px;right:22px;text-align:right;display:flex;flex-direction:column;align-items:flex-end}
+#title h1{font-size:25px;letter-spacing:.14em;color:#3f2f1c}
+#title p{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#6b5a3e;margin-top:2px}
+#codex-btn,#sound-btn{margin-top:9px;font-size:12px;letter-spacing:.06em;color:#5a4632;
+  background:linear-gradient(168deg,rgba(246,236,209,.92),rgba(233,220,190,.9));
+  border:1px solid rgba(90,70,40,.45);border-radius:3px;padding:5px 11px;
+  box-shadow:0 2px 4px rgba(60,40,20,.18)}
+#codex-btn:hover,#sound-btn:hover{background:#f2e6c4}
+#sound-btn{margin-top:7px;font-size:11px;opacity:.85}
+#codex-btn.glow{animation:codexglow 1.6s 3}
+@keyframes codexglow{50%{box-shadow:0 0 12px rgba(140,47,34,.7);border-color:#8c2f22}}
+#stamp{margin-top:12px;padding:5px 9px;border:1.5px solid rgba(140,47,34,.55);color:rgba(140,47,34,.62);
+  font-size:8.5px;letter-spacing:.24em;text-transform:uppercase;text-align:center;line-height:1.7;
+  transform:rotate(-3.5deg);border-radius:2px}
+
+/* ---------- toasts ---------- */
+#toasts{position:absolute;right:22px;top:158px;display:flex;flex-direction:column;gap:8px;max-width:270px}
+.toast{background:linear-gradient(168deg,rgba(246,236,209,.96),rgba(233,220,190,.94));
+  border:1px dashed rgba(140,47,34,.55);color:#4a3826;
+  border-radius:3px;padding:10px 14px;font-size:12.5px;line-height:1.45;
+  box-shadow:0 2px 8px rgba(60,40,20,.25);opacity:0;transform:translateY(-6px) rotate(.4deg);
+  animation:toastIn .5s forwards, toastOut .6s 5s forwards}
+.toast b{display:block;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:#8c2f22;margin-bottom:3px}
+@keyframes toastIn{to{opacity:1;transform:rotate(.4deg)}}
+@keyframes toastOut{to{opacity:0;transform:translateY(-6px) rotate(.4deg)}}
+
+/* ---------- the law banner: a discovery is the loudest thing on the page ---------- */
+#law-banner{position:absolute;left:50%;top:27%;transform:translate(-50%,-50%) rotate(-.6deg) scale(1.05);
+  max-width:min(430px,86vw);text-align:center;padding:16px 26px 15px;
+  background:linear-gradient(168deg,rgba(246,236,209,.97),rgba(233,220,190,.95));
+  border:1.5px solid rgba(140,47,34,.6);border-radius:3px;
+  box-shadow:0 6px 24px rgba(50,32,14,.35), inset 0 0 0 4px rgba(255,250,235,.5);
+  opacity:0;transition:opacity .35s, transform .35s cubic-bezier(.2,.9,.3,1.2)}
+#law-banner.show{opacity:1;transform:translate(-50%,-50%) rotate(-.6deg) scale(1)}
+#law-banner.hidden{display:none}
+#law-banner i{display:block;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;
+  font-style:normal;color:#7a6544;margin-bottom:5px}
+#law-banner b{display:block;font-size:19px;letter-spacing:.1em;text-transform:uppercase;color:#8c2f22;margin-bottom:4px}
+#law-banner span{font-style:italic;font-size:14px;line-height:1.45;color:#4a3826}
+/* a recovered page of Nº 6's journal: ink, not wax — a quieter kind of loud */
+#law-banner.journal{border-color:rgba(74,56,38,.65);border-style:dashed;
+  background:linear-gradient(172deg,rgba(243,234,208,.97),rgba(228,215,183,.95))}
+#law-banner.journal i{color:#5a4632}
+#law-banner.journal span{font-size:14.5px;line-height:1.55}
+
+/* ---------- journal margin notes: the world's quiet ledger ---------- */
+#mnotes{position:absolute;left:22px;bottom:196px;display:flex;flex-direction:column;gap:6px;max-width:250px}
+.mnote{font-style:italic;font-size:12.5px;line-height:1.4;color:rgba(74,56,38,.95);
+  background:rgba(238,226,197,.8);padding:4px 11px 5px;border-radius:2px;
+  border-left:2px solid rgba(140,47,34,.55);transform:rotate(-.4deg);
+  animation:noteIn .45s, toastOut .7s 8s forwards}
+@keyframes noteIn{from{opacity:0;transform:translateX(-8px) rotate(-.4deg)}}
+
+/* ---------- hand & satchel ---------- */
+#hand{position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);display:flex;pointer-events:auto}
+.card{width:112px;height:150px;border-radius:10px;margin:0 -7px;position:relative;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;padding:12px 10px 10px;
+  background:linear-gradient(160deg,#efe3c6,#e2d2a9);border:1px solid #b39c6f;color:#45361c;
+  box-shadow:0 4px 10px rgba(50,35,15,.35), inset 0 0 0 3px rgba(255,250,235,.5), inset 0 0 0 4px rgba(139,115,74,.35);
+  transition:transform .22s cubic-bezier(.2,.9,.3,1.4), box-shadow .22s;
+  transform:translateY(54px) rotate(var(--rot,0deg));transform-origin:50% 120%}
+.card:hover{transform:translateY(-12px) rotate(0deg) scale(1.05);z-index:5}
+.card.sel{transform:translateY(-22px) rotate(0deg) scale(1.08);z-index:6;
+  box-shadow:0 8px 18px rgba(50,35,15,.45), 0 0 0 2px #8c2f22, inset 0 0 0 3px rgba(255,250,235,.5)}
+.card svg{width:40px;height:40px;margin:6px 0 5px;color:#5a4327}
+.card.hot svg{color:#a4471f}
+.card .nm{font-size:14.5px;font-weight:700;letter-spacing:.04em}
+.card .fx{font-size:10.4px;line-height:1.32;text-align:center;margin-top:6px;opacity:.8}
+.card.dealt{animation:dealIn .5s cubic-bezier(.2,.9,.3,1.15)}
+@keyframes dealIn{from{opacity:0;transform:translateY(150px) rotate(9deg)}}
+/* the primer points at a card: a slow wax-red breath (filter only — never fights hover) */
+.card.tut{animation:tutGlow 1.7s ease-in-out infinite}
+@keyframes tutGlow{0%,100%{filter:none}50%{filter:drop-shadow(0 0 8px rgba(161,48,35,.75))}}
+.card.gone{animation:cardGone .4s forwards;pointer-events:none}
+@keyframes cardGone{to{opacity:0;transform:translateY(-60px) rotate(8deg) scale(.7)}}
+
+/* the draw pile sits at the end of the hand like a face-down deck */
+.deckpile{width:68px;height:94px;margin-left:20px;margin-bottom:6px;align-self:flex-end;flex:none;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  border-radius:8px;border:1px solid #a98f5f;color:#6b5535;
+  background:
+    repeating-linear-gradient(45deg,rgba(139,115,74,.12) 0 3px,transparent 3px 9px),
+    linear-gradient(160deg,#eadcba,#ddcb9e);
+  box-shadow:2px 3px 0 -1px #d9c79b, 2px 3px 0 0 #a08a5e, 4px 6px 0 -1px #d3c093, 4px 6px 0 0 #a08a5e, 0 5px 9px rgba(50,35,15,.3),
+    inset 0 0 0 3px rgba(255,250,235,.45);
+  transform:translateY(30px) rotate(2.4deg)}
+.deckpile b{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
+.deckpile .lbl{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:#7a6544;text-align:center}
+.deckpile.flash{animation:chipflash .5s}
+.deckpile.empty{opacity:.5;border-style:dashed;box-shadow:none;background:linear-gradient(160deg,#eadcba,#ddcb9e)}
+
+/* ---------- hint line ---------- */
+#hint{position:absolute;bottom:176px;left:50%;transform:translateX(-50%) rotate(-.4deg);
+  font-style:italic;font-size:13.5px;color:rgba(74,56,38,.95);text-align:center;
+  padding:4px 16px 6px;opacity:0;transition:opacity .3s;
+  background:rgba(238,226,197,.8);border-radius:3px;
+  border-bottom:1px dashed rgba(90,70,45,.5)}
+#hint.show{opacity:1}
+#hint .skip{margin-left:10px;font-size:10.5px;line-height:1;font-style:normal;color:#8a7550;
+  background:none;border:1px solid rgba(90,70,45,.4);border-radius:3px;padding:2px 6px 3px;vertical-align:1px}
+#hint .skip:hover{color:#8c2f22;border-color:#8c2f22}
+
+/* ---------- panels ---------- */
+#codex-panel,#end-panel,#intro-panel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-.3deg);
+  width:min(480px,90vw);max-height:84vh;overflow:auto;pointer-events:auto;
+  background:linear-gradient(165deg,#efe3c6,#e6d6ae);border:1px solid #a98f5f;border-radius:4px;
+  box-shadow:0 14px 50px rgba(40,25,10,.5), inset 0 0 0 6px rgba(255,250,235,.4), inset 0 0 0 7px rgba(139,115,74,.3);
+  padding:28px 32px;transition:opacity .3s, transform .3s}
+#codex-panel.hidden,#end-panel.hidden,#intro-panel.hidden{opacity:0;transform:translate(-50%,-46%) rotate(-.3deg);pointer-events:none}
+#codex-panel h2,#end-panel h2,#intro-panel h2{font-size:22px;letter-spacing:.08em;color:#3f2f1c;
+  border-bottom:2px solid rgba(140,47,34,.4);padding-bottom:8px}
+
+/* the guild letter */
+#intro-panel{box-shadow:0 0 0 100vmax rgba(60,45,25,.28), 0 14px 50px rgba(40,25,10,.5),
+  inset 0 0 0 6px rgba(255,250,235,.4), inset 0 0 0 7px rgba(139,115,74,.3)}
+#intro-panel.hidden{box-shadow:none}
+.intro-kicker{font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:#7a6544;margin-bottom:6px}
+.intro-letter{font-style:italic;font-size:14px;color:#4a3826;margin:12px 0 4px;line-height:1.5}
+.intro-goals{list-style:none;margin:10px 0 4px}
+.intro-goals li{font-size:13.5px;line-height:1.5;padding:7px 0;border-bottom:1px dashed rgba(90,70,40,.25)}
+.intro-goals b{color:#8c2f22;letter-spacing:.03em}
+.intro-commission{margin-top:14px;padding:11px 14px;border:1.5px solid rgba(140,47,34,.45);border-radius:3px}
+.intro-commission>b{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#8c2f22}
+.intro-commission ul{list-style:none;margin:7px 0 4px}
+.intro-commission li{font-size:13.5px;line-height:1.6;color:#4a3826}
+.intro-commission li::before{content:'▢  ';color:#8a7550}
+.intro-commission p{font-size:11.5px;font-style:italic;color:#6b5a3e;margin-top:6px}
+#btn-begin{margin-top:18px;width:100%;font-size:14.5px;letter-spacing:.06em;color:#f2e6c8;
+  background:linear-gradient(170deg,#a13a2b,#7c241a);border:1px solid #5e1810;border-radius:4px;padding:11px 16px;
+  box-shadow:0 3px 8px rgba(60,20,10,.35), inset 0 1px 0 rgba(255,220,200,.25)}
+#btn-begin:hover{background:linear-gradient(170deg,#b04432,#8c2b1e)}
+#end-panel::after{content:'';position:absolute;top:20px;right:24px;width:36px;height:36px;border-radius:50%;
+  background:radial-gradient(circle at 35% 32%,#b04a3a,#7c241a 68%,#5e1810);
+  box-shadow:0 2px 5px rgba(60,20,10,.4), inset 0 2px 4px rgba(255,200,180,.25);transform:rotate(-8deg)}
+.codex-sub{font-style:italic;font-size:12.5px;color:#6b5a3e;margin:8px 0 16px}
+.codex-sub.journal-head{margin-top:22px;padding-top:14px;border-top:2px solid rgba(140,47,34,.35)}
+#codex-list,#journal-list{list-style:none}
+#codex-list li,#journal-list li{padding:9px 2px;border-bottom:1px dashed rgba(90,70,40,.3);font-size:13.5px;line-height:1.4}
+#codex-list li b,#journal-list li b{color:#8c2f22;font-size:12px;letter-spacing:.1em;text-transform:uppercase;display:block}
+#codex-list li.locked,#journal-list li.locked{opacity:.45;font-style:italic}
+#journal-list li{font-style:italic}
+#codex-close,#end-buttons button{margin-top:18px;font-size:13px;letter-spacing:.05em;color:#5a4632;
+  background:rgba(255,250,235,.6);border:1px solid rgba(90,70,40,.45);border-radius:3px;padding:8px 16px}
+#codex-close:hover,#end-buttons button:hover{background:#fff8e6}
+/* stays put while the codex scrolls */
+#codex-x{position:sticky;top:-16px;float:right;margin:-14px -16px 0 0;z-index:2;
+  font-size:14px;line-height:1;color:#5a4632;padding:7px 9px;border-radius:3px;
+  background:rgba(246,236,209,.9);border:1px solid rgba(90,70,40,.4)}
+#codex-x:hover{background:#f2e6c4;color:#8c2f22}
+#end-flavor{font-style:italic;font-size:13.5px;color:#6b5a3e;margin:10px 0 14px}
+#end-tally{list-style:none}
+#end-tally li{display:flex;justify-content:space-between;font-size:14px;padding:6px 2px;
+  border-bottom:1px dashed rgba(90,70,40,.3)}
+#end-tally li.total{font-weight:700;font-size:16px;border-bottom:none;margin-top:4px}
+#end-buttons{display:flex;gap:10px}
