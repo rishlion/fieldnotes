@@ -60,8 +60,12 @@ assets. Palette anchored on parchment (#e9dcbe), sepia ink (#4a3826), wax red (#
   Stone, Survey, Stride.
 - **Fire**: fuel-limited (forest 3, grass 2 ticks), spreads by wind relation
   (downwind 0.42 / gusting 0.92), leaves passable ash, never onto the player's hex.
-- **Ice**: 12 ticks then melts — never beneath your feet. **Causeway**: permanent.
-  **Vine**: makes cliffs climbable; flammable.
+  Fire beside snow melts it into a shallow ford (meltwater). Frost thrown onto a
+  burning hex snuffs it — the wood spared, both cards' work undone (steam).
+- **Ice**: 12 ticks then melts — never beneath your feet. Ember on ice spends the
+  crossing. **Causeway**: permanent. **Vine**: makes cliffs climbable; flammable.
+- **Regrowth**: a meadow beside standing forest returns to forest over time —
+  burn → ash → (rain) → meadow → forest is a buildable, chain-scoring engine.
 - **Weather arc** (Phase 1): seeded schedule per run — calm → winds rising (~day 8, wind
   shifts often, fire travels) → 3-day storm (~day 16: fires drowned, ford floods, ash
   blooms into meadow) → clearing → winter (~day 25: rivers freeze into permanent ice
@@ -69,7 +73,8 @@ assets. Palette anchored on parchment (#e9dcbe), sepia ink (#4a3826), wax red (#
 - **Guild contracts** (Phase 1): 2–3 clauses per expedition (chart N, beacon by day D,
   survey N cairns from expedition 3), escalating with expedition number. Met clauses are
   wax seals: final score = base × (1 + 0.25 × seals). Soft failure only.
-- **Codex**: 10 discoveries (+ rain, winter, cairns), +40 each, persisted across runs.
+- **Codex**: 16 discoveries, +40 each, persisted across runs — laws for every element,
+  the weather, fords, cascades, and the cairns.
 - **Cairn rumours**: surveying the first cairn on an island pencils the unfound ones in
   as dashed rumour sketches at their true hexes (edge-clamped with a chevron when
   off-frame, gone once charted) — cairns are refuel stations, so the pull is the point.

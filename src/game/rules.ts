@@ -127,6 +127,7 @@ function applyWeather(s: RunState, phase: WeatherPhase, ev: GameEvent[]) {
   const playerKey = key(s.player.q, s.player.r);
 
   if (phase === 'storm') {
+    let flooded = 0;
     for (const [k, t] of s.world.tiles) {
       const [q, r] = k.split(',').map(Number);
       // rain smothers every fire — no ash, the wood is spared
@@ -137,6 +138,7 @@ function applyWeather(s: RunState, phase: WeatherPhase, ev: GameEvent[]) {
       // the river swells over the ford
       if (t.t === 'shallow') {
         t.flooded = true;
+        flooded++;
         ev.push({ kind: 'tilechanged', hex: { q, r } });
       }
       // rain eats frost-ice (never beneath your feet)
@@ -147,6 +149,7 @@ function applyWeather(s: RunState, phase: WeatherPhase, ev: GameEvent[]) {
         ev.push({ kind: 'tilechanged', hex: { q, r } });
       }
     }
+    if (flooded > 0) discover(s, 'ON_FLOOD', ev);
   }
 
   if (phase === 'clearing') {
@@ -227,8 +230,24 @@ function tick(s: RunState, ev: GameEvent[]) {
     }
   }
 
-  // fire spreads, then burns down
+  // fire spreads, drinks the snow beside it, then burns down
   let transforms = spreadFire(s, ev);
+  for (const [k, t] of s.world.tiles) {
+    if (!t.burning) continue;
+    const [q, r] = k.split(',').map(Number);
+    for (const n of neighbors({ q, r })) {
+      const nt = tileAt(s, n);
+      if (!nt || nt.t !== 'snow') continue;
+      const roll = mulberry32((s.world.seed ^ (s.day * 83492791) ^ (n.q * 374761393 + n.r * 668265263)) | 0)();
+      if (roll < 0.55) {
+        nt.t = 'shallow'; // meltwater: a ford where neither fire nor snow was
+        transforms++;
+        ev.push({ kind: 'meltwater', hex: n });
+        ev.push({ kind: 'tilechanged', hex: n });
+        discover(s, 'ON_MELTWATER', ev);
+      }
+    }
+  }
   for (const [k, t] of s.world.tiles) {
     if (!t.burning) continue;
     t.burning--;
@@ -245,12 +264,31 @@ function tick(s: RunState, ev: GameEvent[]) {
       ev.push({ kind: 'tilechanged', hex: { q, r } });
     }
   }
+
+  // regrowth: a meadow beside standing forest slowly returns to it
+  for (const [k, t] of s.world.tiles) {
+    if (t.t !== 'meadow' || t.burning) continue;
+    const [q, r] = k.split(',').map(Number);
+    const seeded = neighbors({ q, r }).some((n) => tileAt(s, n)?.t === 'forest');
+    if (!seeded) continue;
+    const roll = mulberry32((s.world.seed ^ (s.day * 19349663) ^ (q * 374761393 + r * 668265263)) | 0)();
+    if (roll < 0.06) {
+      t.t = 'forest';
+      transforms++;
+      s.score += 2;
+      ev.push({ kind: 'score', n: 2, at: { q, r }, label: 'the forest returns' });
+      ev.push({ kind: 'tilechanged', hex: { q, r } });
+      discover(s, 'ON_REGROWTH', ev);
+    }
+  }
+
   if (transforms >= 3) {
     const bonus = 5 * transforms;
     s.chainBonus += bonus;
     s.score += bonus;
     ev.push({ kind: 'chain', n: transforms, at: s.player });
     ev.push({ kind: 'score', n: bonus, at: s.player, label: `chain ×${transforms}` });
+    discover(s, 'ON_CHAIN', ev);
   }
 
   // frost-ice melts (never beneath your feet)
@@ -338,8 +376,12 @@ export function tryMove(s: RunState, to: Axial): GameEvent[] {
   if (s.trail.length > 60) s.trail.shift();
   ev.push({ kind: 'moved', from, to, cost: paid });
 
-  // cairns
   const t = tile!;
+
+  // the ford underfoot teaches its own law
+  if (t.t === 'shallow') discover(s, 'ON_FORD', ev);
+
+  // cairns
   if (t.ov === 'cairn' && !t.visited) {
     t.visited = true;
     s.cairnsFound++;
@@ -453,11 +495,16 @@ export function validTargets(s: RunState, card: CardId): Axial[] {
   switch (card) {
     case 'ember':
       if (s.weather === 'storm') return []; // the rain forbids fire
-      return near.filter((h) => flammable(tileAt(s, h)));
+      // flame takes wood and grass — and, grudgingly, undoes ice
+      return near.filter((h) => {
+        const t = tileAt(s, h)!;
+        return flammable(t) || t.ov === 'ice';
+      });
     case 'gust': return near;
     case 'frost': return near.filter((h) => {
       const t = tileAt(s, h)!;
-      return (t.t === 'ocean' || t.t === 'river' || t.t === 'shallow') && !t.ov && !t.flooded;
+      // frost takes open water — or smothers a fire in a sigh of steam
+      return ((t.t === 'ocean' || t.t === 'river' || t.t === 'shallow') && !t.ov && !t.flooded) || !!t.burning;
     });
     case 'vine': return near.filter((h) => {
       const t = tileAt(s, h)!;
@@ -484,9 +531,20 @@ export function playCard(s: RunState, handIdx: number, target: Axial | null): Ga
   }
 
   switch (card) {
-    case 'ember':
-      ignite(s, target!, ev);
+    case 'ember': {
+      const t = tileAt(s, target!)!;
+      if (t.ov === 'ice') {
+        // fire on ice: the crossing is spent, not the wood
+        t.ov = null;
+        delete t.iceLeft;
+        ev.push({ kind: 'melt', hex: target! });
+        ev.push({ kind: 'tilechanged', hex: target! });
+        discover(s, 'ON_STEAM', ev);
+      } else {
+        ignite(s, target!, ev);
+      }
       break;
+    }
     case 'gust': {
       const d = dirIndex(s.player, target!);
       if (d >= 0) {
@@ -499,11 +557,18 @@ export function playCard(s: RunState, handIdx: number, target: Axial | null): Ga
     }
     case 'frost': {
       const t = tileAt(s, target!)!;
-      t.ov = 'ice';
-      t.iceLeft = 12;
-      ev.push({ kind: 'freeze', hex: target! });
-      ev.push({ kind: 'tilechanged', hex: target! });
-      discover(s, 'ICE_BRIDGE', ev);
+      if (t.burning) {
+        // frost over fire: both are spent; the wood is spared
+        delete t.burning;
+        ev.push({ kind: 'tilechanged', hex: target! });
+        discover(s, 'ON_STEAM', ev);
+      } else {
+        t.ov = 'ice';
+        t.iceLeft = 12;
+        ev.push({ kind: 'freeze', hex: target! });
+        ev.push({ kind: 'tilechanged', hex: target! });
+        discover(s, 'ICE_BRIDGE', ev);
+      }
       break;
     }
     case 'vine': {

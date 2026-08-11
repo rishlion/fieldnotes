@@ -89,6 +89,7 @@ export type GameEvent =
   | { kind: 'burnout'; hex: Axial }
   | { kind: 'freeze'; hex: Axial }
   | { kind: 'melt'; hex: Axial }
+  | { kind: 'meltwater'; hex: Axial }
   | { kind: 'overlay'; hex: Axial; ov: Overlay }
   | { kind: 'cairn'; hex: Axial }
   | { kind: 'discover'; id: string }

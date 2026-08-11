@@ -47,4 +47,10 @@ export const CODEX: CodexEntry[] = [
   { id: 'CAIRN_RUMORS', title: 'On Cairns', text: 'Stones stacked by hands before yours. Find one, and the rest whisper their places.' },
   { id: 'ON_RAIN', title: 'On Rain', text: 'Rain closes the fire’s chapter and opens the meadow’s.' },
   { id: 'ON_WINTER', title: 'On Winter', text: 'Winter locks the rivers open — every water a road, every day a hunger.' },
+  { id: 'ON_STEAM', title: 'On Steam', text: 'Fire and frost spend each other in a white sigh. Whichever came second wins nothing.' },
+  { id: 'ON_MELTWATER', title: 'On Meltwater', text: 'Fire beside snow leaves a ford where neither was.' },
+  { id: 'ON_REGROWTH', title: 'On Regrowth', text: 'The meadow remembers being forest, and returns to it — given neighbours, and time.' },
+  { id: 'ON_FORD', title: 'On Fords', text: 'The river forgives a crossing where it runs shallow. Mind it when the glass falls.' },
+  { id: 'ON_FLOOD', title: 'On Flood', text: 'In storm, the river takes its fords back.' },
+  { id: 'ON_CHAIN', title: 'On Cascades', text: 'One change begets another. The guild pays well for cascades.' },
 ];

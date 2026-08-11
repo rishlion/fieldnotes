@@ -158,6 +158,10 @@ function processEvents(evts: GameEvent[], opts: { fromCard?: boolean; silent?: b
         melts++;
         renderer.addFloater(e.hex, 'the ice gives way', { color: '#4a3826' });
         break;
+      case 'meltwater':
+        sound.melt();
+        renderer.addFloater(e.hex, 'the fire drinks the snow', { color: '#4a3826' });
+        break;
       case 'cairn': {
         renderer.addFloater(e.hex, 'surveyed ✓', { color: '#8c2f22' });
         sound.cairn();

@@ -166,14 +166,20 @@ ranked; P0/P1 built same day, P2 remains open.
 - Wind forecast: margin note predicting tomorrow's wind (makes Gust/Ember plays plans).
 - Success test: winning with <4 cards played should be rare; greed should sometimes kill.
 
-## Phase 2 — "The island answers" (chemistry depth)
+## Phase 2 — "The island answers" (chemistry depth) — ✅ FIRST PASS BUILT (2026-08-11)
 
-- Loop-closing elements: Rain (douse fire; ash → flowering meadow, bonus chart score),
-  Regrowth (meadow → young forest), Meltwater (fire beside snow carves pool/stream).
-  Burn → ash → meadow → forest → burn becomes a buildable engine, card-limited.
-- Interaction-matrix audit: every element × terrain does something or fizzles with flavor
-  (frost over fire = steam; ember on ice = melt).
-- Codex grows to ~18–20 entries; every new law is a discovery.
+- Built: **Meltwater** (fire beside snow → shallow ford, 55%/tick, counts toward
+  chains), **Regrowth** (meadow beside standing forest → forest, 6%/tick, +2, counts
+  toward chains — closing burn → ash → meadow → forest), **Steam both ways** (Frost
+  targets a burning hex → fire out, wood spared; Ember targets ice → crossing spent),
+  and observational laws: **On Fords** (step a shallow), **On Flood** (storm floods
+  fords), **On Cascades** (first chain bonus). Codex 10 → 16. Frost-over-fire and
+  ember-on-ice verified in-browser through the targeting UI.
+- Remaining for a second pass: more fizzles-with-flavor for null pairings, possible
+  Stormglass-style unlockable cards (Phase 4), codex toward 18–20.
+- Also this date: `git init` with clean history (baseline commit of v0.1), Vite
+  `base: './'` for host-anywhere builds, README with itch.io / Pages / Netlify deploy
+  paths. Next deploy step needs Rishabh: create the remote/host account and push.
 
 ## Phase 3 — "The lost expedition" (the soul; Finch + Journey)
 
