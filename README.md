@@ -4,6 +4,10 @@ A browser roguelike about charting an island that doesn't exist until you ink it
 All art and sound are generative code — zero assets. Design in `GAME_DESIGN.md`,
 working log in `IMPROVEMENT_PLAN.md`.
 
+**Play it:**
+- https://rishlion.github.io/fieldnotes/ (GitHub Pages — redeploy with `npm run deploy:pages`)
+- https://fieldnotes-production-dce3.up.railway.app (Railway — redeploy with `railway up --detach`)
+
 ## Dev
 
 ```bash
