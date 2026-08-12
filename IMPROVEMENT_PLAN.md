@@ -38,14 +38,13 @@ bonuses read 0 at the tally. Cliff-click floaters exist in code (1.5s,
 
 ## The next moves, ranked by value
 
-1. **Make the cairn moment land** (small code, precedes field-testing — fresh
-   players are a scarce resource; don't spend them on a known-broken story beat).
-   a. Hold the law/fragment banner queue while any modal is open, or sequence the
-   cairn arrival: cache draft → law → fragment. b. Journal fragments become
-   click-to-dismiss (pages are read, not timed — 5.2s is tight for two sentences).
-   c. One guard line on the daily letter when expedition nº 1 is unfinished
-   ("your first island still waits — the daily is a sterner commission").
-   d. Verify the cliff floater reads at 1.5s; lengthen toward ~2.2s if it doesn't.
+1. ~~**Make the cairn moment land**~~ ✅ BUILT 2026-08-12 (commits 25d0db4,
+   b618d32): banner queue holds while a modal owns the page and the cairn
+   sequences draft → law → fragment; fragments are sticky click-to-dismiss
+   ("turn the page"); the daily letter carries the clerk's note while
+   expedition nº 1 is unfinished; rejection floaters last 2.2s (per-floater
+   ttl); the cache draft digs for a different card when the top two match
+   (no more Gust-vs-Gust). All verified live, typecheck + console clean.
 2. **Field-test the loop** — Rishabh plus two or three friends, zero code. Does the
    daily + report actually get shared? Where do fresh players stall? Every dial
    below waits on this data.
