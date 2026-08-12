@@ -123,15 +123,25 @@ starts on the first user gesture per browser policy.
 - **The expedition report**: a copyable, spoiler-free 4-line summary on the end panel —
   made for pasting where other cartographers will see it.
 
-## Roadmap (not yet built)
+## Roadmap
 
-1. **Vignettes** — cairns hold playable memories of the previous expedition (Edith Finch)
-2. **Guild contracts** — escalating commissions across expeditions (Balatro's blinds)
-3. **More chemistry** — rain, lightning, regrowth on ash; snow + fire = meltwater
-4. **Daily expedition** — shared seed, one attempt, compare scores
-5. **Balance pass** — supplies economy, card counts, chain tuning
-6. **Juice** — charting stagger polish, card-play flourishes, end-tally count-up
-7. **Audio tuning pass** — mix levels and voice character, adjusted by ear in playtests
+Built since v1 (see IMPROVEMENT_PLAN.md for the log): guild contracts & the weather
+arc · chemistry pass one (codex 16 laws) · the Lost Expedition Nº 6 with its scripted
+moments · the daily expedition, cairn draft, and shareable report · the primer ·
+title page + ship-to-shore arrival · seed-priced difficulty · deployed to two hosts
+(URLs in README).
+
+Still open, in rough order of pull:
+1. **Island memory** — retrying a seed keeps the old chart as faint pencil (the last
+   Phase 3 item).
+2. **Chemistry pass two** — codex toward 18–20 laws; every element × terrain answers
+   or fizzles with flavor.
+3. **Balance follow-through** — from field data; defeat should be witnessed, not
+   theoretical.
+4. **Mobile/touch pass** — hover-taught information needs tap equivalents.
+5. **Audio tuning pass** — mix levels and voice character, adjusted by ear.
+6. **The long game** — island archetypes, satchel drafting, codex-milestone card
+   unlocks, PNG expedition report, daily streaks.
 
 ## Dev
 

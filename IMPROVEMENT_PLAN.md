@@ -1,5 +1,59 @@
 # FIELDNOTES — Improvement Plan
 
+## Status — 2026-08-12
+
+Live at **https://rishlion.github.io/fieldnotes/** and
+**https://fieldnotes-production-dce3.up.railway.app** · repo
+**github.com/rishlion/fieldnotes**. This block is the current truth; everything
+below "the build log" is history.
+
+**Built and verified:** core loop · Inked Atlas art + fully synthesized audio ·
+seed-priced difficulty (a Dijkstra beeline anchors supplies and deadline; every
+island stays card-free winnable with a thin margin) · click-to-path movement with
+route preview, rejection floaters, and a walk tween · discovery law banners, journal
+margin notes, end-tally count-up · **the Lost Expedition Nº 6** (12-fragment journal
+at cairns, cairn rumours, when-first card blurbs, letter-as-search) · title page +
+ship-to-shore arrival · the primer (playable, pointing, dismissable tutorial) ·
+**the daily expedition** (shared date seed, one attempt, settled result on the title)
+· cairn cache draft (pick 1 of 2) · spoiler-free copyable report · chemistry pass
+one (codex 16 laws: steam both ways, meltwater, regrowth, fords, floods, cascades) ·
+**Phase 3 scripted moments** (ghost ink trail, the ridge with its fading walkers,
+Pell's button, the twin flame, E.V.'s margin echoes) · the hidden-panel input bug
+found in Rishabh's live playtest, fixed and redeployed.
+
+**Known gaps:** balance is feel-tested, not field-tested — no defeat has ever been
+witnessed; mobile/touch untested and all hover-taught information (route previews,
+terrain names, card blurbs) has no tap equivalent; audio has never been mixed by
+ear; island memory unbuilt; the codex could grow to 18–20.
+
+## The next moves, ranked by value
+
+1. **Field-test the loop** — Rishabh plus two or three friends, zero code. Does the
+   daily + report actually get shared? Where do fresh players stall? Every dial
+   below waits on this data.
+2. **Mobile playability pass** — share links get opened on phones, and touch has no
+   hover. The route preview, terrain labels, and card blurbs need tap equivalents;
+   layout and hit targets need a small-screen check. This gates the share loop.
+3. **Balance follow-through** — from field data: are day-12 wins common (runs too
+   short)? does starvation ever land? full-seal rate? Staged dials: supplies margin
+   +4 → +3, floor 14 → 13, chart base 0.18 → 0.20.
+4. **Island memory** — retrying a seed keeps the old chart as faint pencil. Small,
+   poetic, and it closes Phase 3.
+5. **Chemistry pass two** — codex toward 18–20: gust × terrain, more
+   fizzles-with-flavor; keeps discovery alive for returning players.
+6. **Audio mix pass by ear** — the one v1 roadmap item never done.
+7. **Phase 4 long game** (after validation) — island archetypes · satchel drafting ·
+   codex-milestone card unlocks · PNG map report · daily streaks.
+
+**Ops notes:** Pages deploys via `npm run deploy:pages` (the gh token lacks workflow
+scope for Actions); Railway via `railway up --service fieldnotes --detach`; any new
+overlay panel must disarm its `.hidden *` subtree (pointer-events) or its invisible
+buttons will haunt the page.
+
+---
+
+## The build log (history)
+
 Written after playtesting v0.1 (core loop + Inked Atlas + dynamic camera + synth audio).
 Each phase attacks a diagnosed weakness. Polish (phase 5) threads between phases.
 

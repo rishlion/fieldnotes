@@ -6,7 +6,14 @@ working log in `IMPROVEMENT_PLAN.md`.
 
 **Play it:**
 - https://rishlion.github.io/fieldnotes/ (GitHub Pages — redeploy with `npm run deploy:pages`)
-- https://fieldnotes-production-dce3.up.railway.app (Railway — redeploy with `railway up --detach`)
+- https://fieldnotes-production-dce3.up.railway.app (Railway — redeploy with `railway up --service fieldnotes --detach`)
+
+**Where it stands (2026-08-12):** the full loop is live — seeded islands, element-card
+chemistry with a 16-law discovery codex, the Lost Expedition Nº 6 story told through
+cairn journals and scripted moments, a guided first-expedition primer, a shared-seed
+daily with one attempt and a copyable spoiler-free report. Current focus: field-testing
+with real players, a mobile/touch pass, and balance follow-through. The ranked plan
+lives at the top of `IMPROVEMENT_PLAN.md`; systems detail in `GAME_DESIGN.md`.
 
 ## Dev
 
