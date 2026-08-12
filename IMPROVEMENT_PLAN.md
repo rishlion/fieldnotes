@@ -137,8 +137,17 @@ ranked; P0/P1 built same day, P2 remains open.
     spoiler-free journal-voiced text block (⬡ hexes · ⚑ cairns · ✦ laws · seals ·
     score) for pasting anywhere; clipboard with execCommand fallback.
 
+### Surfaced-issue sweep — ✅ BUILT (2026-08-12)
+21. The open items from earlier reviews, closed: **hover terrain names** ("beach · −1",
+    "forest · −2 · 3 days" — vocabulary taught in passing, overlays named too), the
+    **walk tween** (the cartographer slides hex-to-hex over 220 ms with a small step
+    arc instead of teleporting — auto-walk finally reads as walking), and the
+    **end-tally count-up** (each ledger line counts up staggered, then the total, then
+    the record suffix). The live-site partial-viewport framing was investigated and
+    confirmed environmental: the embedded preview pane reports a 0×0 viewport (the
+    documented quirk the renderer already guards against) — real browsers unaffected.
+
 ### P2 — open (next up, in order)
-14. **Hover terrain names** — "forest · −2" teaches vocabulary faster than "−2".
 15. **Blind-playtest the new economy** — the difficulty pass was feel-tested with full
     map knowledge; watch a truly blind run (or Rishabh's own) for whether full seal is
     still reachable and whether defeat by empty satchel ever lands. Dials to nudge:

@@ -93,6 +93,8 @@ export class Hud {
 
   /** the spoiler-free expedition report, rebuilt at each run's end */
   private shareText = '';
+  /** the tally count-up's animation frame handle */
+  private tallyRaf = 0;
 
   get codexOpen(): boolean {
     return !this.codexPanel.classList.contains('hidden');
@@ -426,16 +428,50 @@ export class Hud {
     const sealDots = s.contract.map((c) => (c.met ? '●' : '○')).join(' ');
     rows.push([`guild seals ${sealDots}`, `×${(1 + 0.25 * seals).toFixed(2)}`]);
     tally.innerHTML = '';
+    // the ledger counts itself up, line by line
+    const counting: { el: HTMLElement; final: number }[] = [];
     for (const [label, value] of rows) {
       const li = document.createElement('li');
-      li.innerHTML = `<span>${label}</span><span>${value}</span>`;
+      const l = document.createElement('span');
+      l.textContent = label;
+      const v = document.createElement('span');
+      if (typeof value === 'number') {
+        v.textContent = '0';
+        counting.push({ el: v, final: value });
+      } else {
+        v.textContent = value;
+      }
+      li.append(l, v);
       tally.appendChild(li);
     }
     const total = document.createElement('li');
     total.className = 'total';
     const fin = finalScore(s);
-    total.innerHTML = `<span>score</span><span>${fin}${isBest ? ' — a guild record' : ` (best ${best})`}</span>`;
+    const totalLabel = document.createElement('span');
+    totalLabel.textContent = 'score';
+    const totalVal = document.createElement('span');
+    totalVal.textContent = '0';
+    total.append(totalLabel, totalVal);
     tally.appendChild(total);
+
+    cancelAnimationFrame(this.tallyRaf);
+    const t0 = performance.now();
+    const suffix = isBest ? ' — a guild record' : ` (best ${best})`;
+    const tick = (now: number) => {
+      let running = false;
+      counting.forEach((c, i) => {
+        const t = Math.min(1, Math.max(0, (now - t0 - i * 110) / 380));
+        c.el.textContent = String(Math.round(c.final * (1 - Math.pow(1 - t, 2))));
+        if (t < 1) running = true;
+      });
+      const tt = Math.min(1, Math.max(0, (now - t0 - counting.length * 110) / 600));
+      totalVal.textContent = tt < 1
+        ? String(Math.round(fin * (1 - Math.pow(1 - tt, 2))))
+        : `${fin}${suffix}`;
+      if (tt < 1) running = true;
+      if (running) this.tallyRaf = requestAnimationFrame(tick);
+    };
+    this.tallyRaf = requestAnimationFrame(tick);
 
     // the report: compact, journal-voiced, and spoiler-free — made to be pasted
     const beacon = s.contract.find((c) => c.kind === 'beacon');
@@ -454,6 +490,7 @@ export class Hud {
   }
 
   hideEnd() {
+    cancelAnimationFrame(this.tallyRaf);
     this.endPanel.classList.add('hidden');
   }
 }

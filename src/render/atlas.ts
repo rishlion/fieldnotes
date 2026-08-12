@@ -14,6 +14,22 @@ const WASH: Partial<Record<Terrain, string>> = {
   highland: '#adb78a', snow: '#efe9da', peak: '#e8ddc6',
 };
 
+/** what the hover label calls each terrain — vocabulary taught in passing */
+const TERRAIN_NAME: Record<Terrain, string> = {
+  ocean: 'open water', shallow: 'shallows', beach: 'beach', grass: 'grassland',
+  forest: 'forest', ash: 'ash', meadow: 'meadow', river: 'river', cliff: 'cliff',
+  highland: 'highland', snow: 'snow', peak: 'the summit',
+};
+
+function tileName(t: Tile): string {
+  if (t.ov === 'ice') return 'ice';
+  if (t.ov === 'causeway') return 'causeway';
+  if (t.ov === 'vine') return 'vine';
+  if (t.ov === 'cairn') return 'cairn';
+  if (t.ov === 'beacon') return 'the beacon';
+  return TERRAIN_NAME[t.t];
+}
+
 /** direction of edge e (edge spans corners e and e+1) */
 const EDGE_DIR: Axial[] = [
   { q: 1, r: 0 }, { q: 0, r: 1 }, { q: -1, r: 1 },
@@ -58,6 +74,12 @@ export class AtlasRenderer {
   chartVeiled = true;
   /** the primer's pencil ring: the hex it is currently pointing at */
   tutHex: Axial | null = null;
+  /** the walk tween: the cartographer slides between hexes rather than teleporting */
+  private moveAnim: { from: Axial; to: Axial; t0: number } | null = null;
+
+  playerMoved(from: Axial, to: Axial) {
+    this.moveAnim = { from, to, t0: performance.now() };
+  }
 
   /* ship-to-shore arrival: a short inked crossing before the letter */
   private arrival: { t0: number; dur: number; onDone: () => void } | null = null;
@@ -92,6 +114,7 @@ export class AtlasRenderer {
     this.beaconLit = false;
     this.chartVeiled = true;
     this.tutHex = null;
+    this.moveAnim = null;
     this.layout();
   }
 
@@ -1073,10 +1096,10 @@ export class AtlasRenderer {
     if (isNeighbor) {
       outline(cost === null);
       if (cost === null) {
-        label(tile.burning ? 'aflame' : tile.flooded ? 'flooded' : 'no way through', true);
+        label(`${tileName(tile)} · ${tile.burning ? 'aflame' : tile.flooded ? 'flooded' : 'no way through'}`, true);
       } else {
         const paid = s.freeSteps > 0 ? 0 : cost;
-        label(paid === 0 ? 'free' : `−${paid}`, false);
+        label(`${tileName(tile)} · ${paid === 0 ? 'free' : `−${paid}`}`, false);
       }
       g.restore();
       return;
@@ -1087,7 +1110,7 @@ export class AtlasRenderer {
     const route = this.routeTo(h);
     if (!route) {
       outline(true);
-      label(tile.burning ? 'aflame' : tile.flooded ? 'flooded' : 'no way through', true);
+      label(`${tileName(tile)} · ${tile.burning ? 'aflame' : tile.flooded ? 'flooded' : 'no way through'}`, true);
       g.restore();
       return;
     }
@@ -1106,7 +1129,7 @@ export class AtlasRenderer {
     outline(false);
     const paid = pathSupplyCost(s, route.path);
     const days = route.path.length;
-    label(`${paid === 0 ? 'free' : `−${paid}`} · ${days} day${days > 1 ? 's' : ''}`, false);
+    label(`${tileName(tile)} · ${paid === 0 ? 'free' : `−${paid}`} · ${days} day${days > 1 ? 's' : ''}`, false);
     g.restore();
   }
 
@@ -1200,7 +1223,19 @@ export class AtlasRenderer {
   private drawPlayer(g: CanvasRenderingContext2D, now: number) {
     if (this.arrival || this.chartVeiled) return; // still aboard
     const s = this.state;
-    const { x, y } = this.center(s.player);
+    let { x, y } = this.center(s.player);
+    if (this.moveAnim) {
+      const t = (now - this.moveAnim.t0) / 220;
+      if (t >= 1) {
+        this.moveAnim = null;
+      } else {
+        const a = this.center(this.moveAnim.from);
+        const b = this.center(this.moveAnim.to);
+        const e = 1 - Math.pow(1 - t, 2);
+        x = a.x + (b.x - a.x) * e;
+        y = a.y + (b.y - a.y) * e - Math.sin(Math.PI * t) * this.S * 0.14; // a small step's arc
+      }
+    }
     const u = Math.min(1.9, Math.max(0.9, this.S / BASE));
     g.save();
     g.translate(x, y);

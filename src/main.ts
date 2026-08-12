@@ -144,6 +144,7 @@ function processEvents(evts: GameEvent[], opts: { fromCard?: boolean; silent?: b
       case 'moved': {
         const t = tileAt(state, e.to);
         sound.step(t?.t, t?.ov === 'ice');
+        renderer.playerMoved(e.from, e.to);
         movesMade++;
         break;
       }
