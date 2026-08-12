@@ -26,23 +26,46 @@ witnessed; mobile/touch untested and all hover-taught information (route preview
 terrain names, card blurbs) has no tap equivalent; audio has never been mixed by
 ear; island memory unbuilt; the codex could grow to 18–20.
 
+**Fresh playtest, 2026-08-12 (Claude, cleared storage):** exp 1 won day 11/20,
+7 supplies left, score 585, 4 laws, never tense. Top finding: at the first cairn
+the law banner, journal fragment, and cache-draft modal all fire at once — the
+banner queue (law 2.8s → fragment 5.2s, `hud.ts`) keeps draining behind the modal,
+so **Fragment I plays unseen**. The story hook every fresh player should hit is
+currently swallowed by UI. Also: a brand-new player can open the daily (exp-3
+commission) as their first-ever game; win required only Survey/Frost/Vine — chain
+bonuses read 0 at the tally. Cliff-click floaters exist in code (1.5s,
+`atlas.ts`) — pane couldn't confirm feel; verify live.
+
 ## The next moves, ranked by value
 
-1. **Field-test the loop** — Rishabh plus two or three friends, zero code. Does the
+1. **Make the cairn moment land** (small code, precedes field-testing — fresh
+   players are a scarce resource; don't spend them on a known-broken story beat).
+   a. Hold the law/fragment banner queue while any modal is open, or sequence the
+   cairn arrival: cache draft → law → fragment. b. Journal fragments become
+   click-to-dismiss (pages are read, not timed — 5.2s is tight for two sentences).
+   c. One guard line on the daily letter when expedition nº 1 is unfinished
+   ("your first island still waits — the daily is a sterner commission").
+   d. Verify the cliff floater reads at 1.5s; lengthen toward ~2.2s if it doesn't.
+2. **Field-test the loop** — Rishabh plus two or three friends, zero code. Does the
    daily + report actually get shared? Where do fresh players stall? Every dial
    below waits on this data.
-2. **Mobile playability pass** — share links get opened on phones, and touch has no
+3. **Mobile playability pass** — share links get opened on phones, and touch has no
    hover. The route preview, terrain labels, and card blurbs need tap equivalents;
    layout and hit targets need a small-screen check. This gates the share loop.
-3. **Balance follow-through** — from field data: are day-12 wins common (runs too
-   short)? does starvation ever land? full-seal rate? Staged dials: supplies margin
-   +4 → +3, floor 14 → 13, chart base 0.18 → 0.20.
-4. **Island memory** — retrying a seed keeps the old chart as faint pencil. Small,
+4. **Balance follow-through** — from field data plus the 08-12 run (another
+   comfortable day-11 win; zero supply anxiety): are day-11/12 wins common? does
+   starvation ever land? full-seal rate? Staged dials: supplies margin +4 → +3,
+   floor 14 → 13, chart base 0.18 → 0.20.
+5. **Give the chemistry a reason** — a win never needs Ember/Gust/Stone/Stride and
+   chain bonuses sit at 0. Options to weigh together before building: a chain-bonus
+   commission clause on exp 2+ · cache drafts biased toward combo pairs · a
+   "spectacle" side-commission the guild pays extra for. Design choice first.
+6. **Island memory** — retrying a seed keeps the old chart as faint pencil. Small,
    poetic, and it closes Phase 3.
-5. **Chemistry pass two** — codex toward 18–20: gust × terrain, more
+7. **Chemistry pass two** — codex toward 18–20: gust × terrain, more
    fizzles-with-flavor; keeps discovery alive for returning players.
-6. **Audio mix pass by ear** — the one v1 roadmap item never done.
-7. **Phase 4 long game** (after validation) — island archetypes · satchel drafting ·
+8. **Audio mix pass by ear** — the one v1 roadmap item never done.
+9. **Phase 4 long game** (after validation) — island archetypes · satchel drafting ·
    codex-milestone card unlocks · PNG map report · daily streaks.
 
 **Ops notes:** Pages deploys via `npm run deploy:pages` (the gh token lacks workflow

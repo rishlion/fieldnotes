@@ -37,7 +37,7 @@ const EDGE_DIR: Axial[] = [
 ];
 
 interface Settle { hex: Axial; sprite: HTMLCanvasElement; spriteS: number; t0: number; stamped: boolean }
-interface Floater { x: number; y: number; text: string; color: string; t0: number; big?: boolean }
+interface Floater { x: number; y: number; text: string; color: string; t0: number; big?: boolean; ttl: number }
 
 export class AtlasRenderer {
   private cv: HTMLCanvasElement;
@@ -667,12 +667,13 @@ export class AtlasRenderer {
     this.settles.push({ hex: h, sprite: this.spriteFor(h, tile), spriteS: this.S, t0: now + delayMs, stamped: false });
   }
 
-  addFloater(h: Axial, text: string, opts: { color?: string; big?: boolean } = {}) {
+  addFloater(h: Axial, text: string, opts: { color?: string; big?: boolean; ttl?: number } = {}) {
     const c = this.center(h);
     const jitter = (Math.random() - 0.5) * 14;
     this.floaters.push({
       x: c.x + jitter, y: c.y - this.S * 0.6, text,
       color: opts.color ?? INK, t0: performance.now(), big: opts.big,
+      ttl: opts.ttl ?? 1500,
     });
   }
 
@@ -1367,10 +1368,10 @@ export class AtlasRenderer {
   private drawFloaters(g: CanvasRenderingContext2D, now: number) {
     g.save();
     g.textAlign = 'center';
-    this.floaters = this.floaters.filter((f) => now - f.t0 < 1500);
+    this.floaters = this.floaters.filter((f) => now - f.t0 < f.ttl);
     const size = Math.min(19, Math.max(11, this.S * 0.5));
     for (const f of this.floaters) {
-      const t = (now - f.t0) / 1500;
+      const t = (now - f.t0) / f.ttl;
       const ease = 1 - Math.pow(1 - t, 2);
       g.globalAlpha = t < 0.15 ? t / 0.15 : 1 - ease * 0.9;
       g.fillStyle = f.color;

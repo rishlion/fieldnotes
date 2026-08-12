@@ -414,7 +414,7 @@ cv.addEventListener('pointerdown', (e) => {
     if (evts.length === 0) {
       const t = tileAt(state, hex);
       renderer.addFloater(hex, !t ? 'beyond the chart' : t.burning ? 'aflame' : t.flooded ? 'flooded' : 'no way through',
-        { color: '#8c2f22' });
+        { color: '#8c2f22', ttl: 2200 });
       renderer.draw(performance.now());
       return;
     }
@@ -424,13 +424,13 @@ cv.addEventListener('pointerdown', (e) => {
   // a distant click: walk the charted route there, a day at a time
   const tile = tileAt(state, hex);
   if (!tile) {
-    renderer.addFloater(hex, 'beyond the chart', { color: '#8a7550' });
+    renderer.addFloater(hex, 'beyond the chart', { color: '#8a7550', ttl: 2200 });
   } else if (!tile.charted) {
-    renderer.addFloater(hex, 'uncharted', { color: '#8a7550' });
+    renderer.addFloater(hex, 'uncharted', { color: '#8a7550', ttl: 2200 });
   } else {
     const route = findPath(state, hex);
     if (!route) {
-      renderer.addFloater(hex, 'no way through', { color: '#8c2f22' });
+      renderer.addFloater(hex, 'no way through', { color: '#8c2f22', ttl: 2200 });
     } else {
       autoWalk = route.path;
       stepAutoWalk();

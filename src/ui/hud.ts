@@ -1,5 +1,5 @@
 import { CARDS, CARD_ICONS, CODEX } from '../game/cards';
-import { loadCodex, fragmentsRead } from '../game/codexStore';
+import { loadCodex, fragmentsRead, currentExpeditionNo } from '../game/codexStore';
 import { FRAGMENTS, roman } from '../game/story';
 import { finalScore, sealsMet } from '../game/rules';
 import type { CardId, Clause, RunState } from '../game/types';
@@ -72,6 +72,10 @@ export class Hud {
       this.onBegin();
     });
     document.getElementById('choice-skip')!.addEventListener('click', () => this.pickChoice(null));
+    // journal pages wait for the reader — a click turns them
+    this.lawEl.addEventListener('click', () => {
+      if (this.lawShowing && this.lawEl.classList.contains('sticky')) this.hideBanner();
+    });
     const shareBtn = document.getElementById('btn-share')!;
     shareBtn.addEventListener('click', () => {
       const done = () => {
@@ -105,11 +109,15 @@ export class Hud {
   }
 
   showIntro(s: RunState) {
+    this.clearBanners(); // a new expedition starts with a clean page
     this.introH2.textContent = this.dailyLabel ? 'The Daily Expedition' : `Expedition Nº ${s.expeditionNo}`;
     // a returning cartographer knows the four verbs — the letter gets out of the way
     const returning = s.expeditionNo > 1;
     (document.getElementById('intro-goals') as HTMLElement).hidden = returning;
     (document.getElementById('intro-standing') as HTMLElement).hidden = !returning;
+    // the daily is a mid-campaign commission — warn a cartographer who hasn't charted their first
+    (document.getElementById('intro-daily-note') as HTMLElement).hidden =
+      !(this.dailyLabel && currentExpeditionNo() === 1);
     this.introCommission.innerHTML = '';
     for (const c of s.contract) {
       const li = document.createElement('li');
@@ -243,10 +251,14 @@ export class Hud {
     if (this.toastsEl.children.length > 3) this.toastsEl.firstElementChild?.remove();
   }
 
-  /* discoveries and journal pages stop the page: centered banner, queued */
+  /* discoveries and journal pages stop the page: centered banner, queued.
+     ms === 0 marks a sticky banner — it waits for the reader's click.
+     the queue holds while a modal owns the page, and resumes when it closes */
   private lawEl = document.getElementById('law-banner')!;
   private lawQueue: { html: string; ms: number; cls: string }[] = [];
   private lawShowing = false;
+  private lawCurrent: { html: string; ms: number; cls: string } | null = null;
+  private lawTimer = 0;
 
   law(title: string, text: string) {
     this.pushBanner(
@@ -257,8 +269,9 @@ export class Hud {
 
   fragment(idx: number) {
     this.pushBanner(
-      `<i>from the journal of expedition nº 6 · fragment ${roman(idx)}</i><span>${FRAGMENTS[idx]}</span>`,
-      5200, 'journal'
+      `<i>from the journal of expedition nº 6 · fragment ${roman(idx)}</i><span>${FRAGMENTS[idx]}</span>` +
+        `<u class="turn">turn the page</u>`,
+      0, 'journal sticky'
     );
   }
 
@@ -272,23 +285,55 @@ export class Hud {
     this.pumpLaw();
   }
 
+  /** a modal owns the page while it's up — banners wait their turn */
+  private get pageHeld(): boolean {
+    return this.choiceOpen || this.introVisible || !this.endPanel.classList.contains('hidden');
+  }
+
   private pumpLaw() {
-    if (this.lawShowing) return;
+    if (this.lawShowing || this.pageHeld) return;
     const next = this.lawQueue.shift();
     if (!next) return;
     this.lawShowing = true;
+    this.lawCurrent = next;
     this.lawEl.innerHTML = next.html;
     this.lawEl.className = next.cls; // clears 'hidden'/'show', applies variant
     void (this.lawEl as HTMLElement).offsetWidth;
     this.lawEl.classList.add('show');
+    if (next.ms > 0) this.lawTimer = window.setTimeout(() => this.hideBanner(), next.ms);
+  }
+
+  private hideBanner() {
+    if (!this.lawShowing) return;
+    window.clearTimeout(this.lawTimer);
+    this.lawCurrent = null;
+    this.lawEl.classList.remove('show');
     setTimeout(() => {
-      this.lawEl.classList.remove('show');
-      setTimeout(() => {
-        this.lawEl.classList.add('hidden');
-        this.lawShowing = false;
-        this.pumpLaw();
-      }, 400);
-    }, next.ms);
+      this.lawEl.classList.add('hidden');
+      this.lawShowing = false;
+      this.pumpLaw();
+    }, 400);
+  }
+
+  /** a modal interrupts mid-banner: put the banner back at the head, unread */
+  private holdBanner() {
+    if (!this.lawShowing || !this.lawCurrent) return;
+    window.clearTimeout(this.lawTimer);
+    this.lawQueue.unshift(this.lawCurrent);
+    this.lawCurrent = null;
+    this.lawEl.classList.remove('show');
+    this.lawEl.classList.add('hidden');
+    this.lawShowing = false;
+  }
+
+  /** a new expedition starts with a clean page */
+  private clearBanners() {
+    window.clearTimeout(this.lawTimer);
+    this.lawQueue = [];
+    this.lawCurrent = null;
+    this.lawShowing = false;
+    this.lawEl.classList.remove('show');
+    this.lawEl.classList.add('hidden');
   }
 
   /* the cairn's cache: take one of two, or leave it be */
@@ -302,6 +347,7 @@ export class Hud {
   }
 
   showCardChoice(a: CardId, b: CardId) {
+    this.holdBanner(); // the cache takes the page; laws and pages return after
     this.choice = [a, b];
     this.choiceCards.innerHTML = '';
     [a, b].forEach((id, i) => {
@@ -320,6 +366,7 @@ export class Hud {
     this.choice = null;
     this.choicePanel.classList.add('hidden');
     this.onCardChoice(pick);
+    this.pumpLaw(); // anything the modal held (the law, the page) now gets its turn
   }
 
   /* the journal's margin: quiet notes on what the world did by itself */
@@ -404,6 +451,7 @@ export class Hud {
   }
 
   showEnd(s: RunState, best: number, isBest: boolean) {
+    this.holdBanner(); // the tally takes the page; unread pages wait in the codex
     const title = document.getElementById('end-title')!;
     const flavor = document.getElementById('end-flavor')!;
     const tally = document.getElementById('end-tally')!;

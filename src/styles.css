@@ -152,6 +152,11 @@ body.arriving #hint,body.arriving #toasts,body.arriving #mnotes{opacity:0;pointe
   background:linear-gradient(172deg,rgba(243,234,208,.97),rgba(228,215,183,.95))}
 #law-banner.journal i{color:#5a4632}
 #law-banner.journal span{font-size:14.5px;line-height:1.55}
+/* a sticky page waits for the reader — the only banner that takes clicks */
+#law-banner.sticky{pointer-events:auto;cursor:pointer}
+#law-banner .turn{display:block;margin-top:9px;font-size:9px;letter-spacing:.24em;
+  text-transform:uppercase;text-decoration:none;color:#8a7550;opacity:.85}
+#law-banner.sticky:hover .turn{color:#8c2f22}
 
 /* ---------- journal margin notes: the world's quiet ledger ---------- */
 #mnotes{position:absolute;left:22px;bottom:196px;display:flex;flex-direction:column;gap:6px;max-width:250px}
@@ -229,6 +234,7 @@ body.arriving #hint,body.arriving #toasts,body.arriving #mnotes{opacity:0;pointe
 #intro-panel.hidden{box-shadow:none}
 .intro-kicker{font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:#7a6544;margin-bottom:6px}
 .intro-letter{font-style:italic;font-size:14px;color:#4a3826;margin:12px 0 4px;line-height:1.5}
+.intro-caution{font-size:12.5px;color:#8c2f22;border-left:2px solid rgba(140,47,34,.45);padding-left:10px}
 .intro-goals{list-style:none;margin:10px 0 4px}
 .intro-goals li{font-size:13.5px;line-height:1.5;padding:7px 0;border-bottom:1px dashed rgba(90,70,40,.25)}
 .intro-goals b{color:#8c2f22;letter-spacing:.03em}
