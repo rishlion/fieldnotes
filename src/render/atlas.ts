@@ -1157,7 +1157,7 @@ export class AtlasRenderer {
 
   private drawHover(g: CanvasRenderingContext2D) {
     const s = this.state;
-    if (!this.hover || s.over) return;
+    if (!this.hover || s.over || this.chartVeiled) return;
     const h = this.hover;
     const tile = tileAt(s, h);
     if (!tile) return;

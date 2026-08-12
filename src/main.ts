@@ -366,7 +366,10 @@ hud.onCardSelect = (idx) => {
 };
 
 cv.addEventListener('pointermove', (e) => {
-  renderer.hover = renderer.screenToHex(e.clientX, e.clientY);
+  // no hover chatter while a panel or the crossing holds the page
+  renderer.hover = hud.introVisible || hud.choiceOpen || inFlow || renderer.arrivalActive
+    ? null
+    : renderer.screenToHex(e.clientX, e.clientY);
   renderer.draw(performance.now());
 });
 

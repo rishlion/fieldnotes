@@ -217,6 +217,9 @@ body.arriving #hint,body.arriving #toasts,body.arriving #mnotes{opacity:0;pointe
   box-shadow:0 14px 50px rgba(40,25,10,.5), inset 0 0 0 6px rgba(255,250,235,.4), inset 0 0 0 7px rgba(139,115,74,.3);
   padding:28px 32px;transition:opacity .3s, transform .3s}
 #codex-panel.hidden,#end-panel.hidden,#intro-panel.hidden{opacity:0;transform:translate(-50%,-46%) rotate(-.3deg);pointer-events:none}
+/* a hidden panel's buttons must not haunt the page — #overlay button re-enables
+   pointer-events on children, so hidden panels get their whole subtree disarmed */
+#codex-panel.hidden *,#end-panel.hidden *,#intro-panel.hidden *{pointer-events:none}
 #codex-panel h2,#end-panel h2,#intro-panel h2{font-size:22px;letter-spacing:.08em;color:#3f2f1c;
   border-bottom:2px solid rgba(140,47,34,.4);padding-bottom:8px}
 
