@@ -392,6 +392,16 @@ export function tryMove(s: RunState, to: Axial): GameEvent[] {
     ev.push({ kind: 'supplies', n: 6, at: to });
     // the cache beneath the stones: choose one of two cards; a second comes blind
     if (s.deck.length >= 2 && s.hand.length < 6) {
+      // the keeper packed variety: if the top two match, dig deeper for a different card
+      const top = s.deck[s.deck.length - 1];
+      if (s.deck[s.deck.length - 2] === top) {
+        for (let i = s.deck.length - 3; i >= 0; i--) {
+          if (s.deck[i] !== top) {
+            [s.deck[i], s.deck[s.deck.length - 2]] = [s.deck[s.deck.length - 2], s.deck[i]];
+            break;
+          }
+        }
+      }
       ev.push({ kind: 'cardchoice', a: s.deck[s.deck.length - 1], b: s.deck[s.deck.length - 2] });
     } else {
       drawCards(s, 2, ev);
