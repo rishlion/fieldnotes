@@ -56,6 +56,21 @@ export function readNextFragment(total: number): number | null {
   return n;
 }
 
+/** One-time story flags (the ridge witnessed, the button kept, echoes heard). */
+const FLAG_KEY = 'fieldnotes.flags.v1';
+
+export function flagSet(id: string): boolean {
+  try { return (JSON.parse(localStorage.getItem(FLAG_KEY) ?? '[]') as string[]).includes(id); } catch { return false; }
+}
+
+export function markFlag(id: string): void {
+  try {
+    const flags = new Set(JSON.parse(localStorage.getItem(FLAG_KEY) ?? '[]') as string[]);
+    flags.add(id);
+    localStorage.setItem(FLAG_KEY, JSON.stringify([...flags]));
+  } catch { /* private mode */ }
+}
+
 export function bestScore(): number {
   try { return parseInt(localStorage.getItem(BEST_KEY) ?? '0', 10) || 0; } catch { return 0; }
 }

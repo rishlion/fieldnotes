@@ -190,13 +190,25 @@ ranked; P0/P1 built same day, P2 remains open.
   `base: './'` for host-anywhere builds, README with itch.io / Pages / Netlify deploy
   paths. Next deploy step needs Rishabh: create the remote/host account and push.
 
-## Phase 3 — "The lost expedition" (the soul; Finch + Journey)
+## Phase 3 — "The lost expedition" — ✅ SCRIPTED MOMENTS BUILT (2026-08-12)
 
-- Cairns hold out-of-order journal fragments of Expedition Nº 6 (the one that never
-  returned), each a few sparse sentences, sometimes with a scripted moment (ghost-ink
-  trail for three days; "stand where they stood"). Beacon finale acknowledges the story.
-- Arrival/finale staging: ship-to-shore ink sketch opening; closing line under pull-back.
-- Island memory: retrying a seed keeps the old chart as faint pencil.
+Concept session held with Rishabh (all five moments approved, fading walkers included).
+Built, all keyed to journal progress (`fragmentsRead`) with career-once flags
+(`fieldnotes.flags.v1`):
+- **The Ghost Ink Trail** (≥ vii): first cairn surveyed per island reveals Nº 6's line
+  of march — a pale route to the peak over charted and uncharted ground alike
+  (`ghostRoute`), fading over three days.
+- **Stand Where They Stood** (≥ ix, once ever): a pencil ✕ marks the ridge near the
+  peak; standing there charts a radius-3 "long look" while two pale-ink figures climb
+  toward the summit and dissolve — the game's only human shapes — under the banner
+  "From here, E.V. watched them go. It is a long way to watch anyone go."
+- **The Button** (≥ x, once ever): the col cairn yields Pell's button; the title-page
+  bookmark gains "· her button, kept" forever.
+- **The Twin Flame** (journal whole): lighting any beacon draws a second, smaller
+  flame — floater "the beacon is lit — theirs, at last."
+- **Journal Echoes** (career-once each): first storm after vi, first winter after xi,
+  first ice crossing after iv — E.V. speaks one line from the margin.
+Remaining from Phase 3: island memory (retrying a seed keeps the old chart as pencil).
 
 ## Phase 4 — "The long game" (replayability/meta)
 

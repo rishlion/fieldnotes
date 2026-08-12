@@ -95,6 +95,11 @@ assets. Palette anchored on parchment (#e9dcbe), sepia ink (#4a3826), wax red (#
   persisted across runs; collected pages reread in the codex. Fragments teach the
   economy and the island's laws diegetically. Card blurbs lead with the situation they
   answer ("A river bars the way? Freeze a crossing of ice.").
+- **Scripted moments** (escalating with journal progress, career-once where noted):
+  the ghost ink trail (their line of march, three days from fading), the ridge where
+  E.V. stood (two pale figures climb and dissolve; a radius-3 long look), Pell's
+  button at the col cairn (kept forever on the title bookmark), the twin flame once
+  the journal is whole, and E.V.'s margin echoes when the weather repeats the story.
 - **Scoring**: hex +1 · cairn +25 · discovery +40 · chain 5×n (n≥3 transforms in one
   tick) · beacon +150 · leftover supplies ×2. Best score persisted.
 

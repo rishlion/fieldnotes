@@ -262,6 +262,11 @@ export class Hud {
     );
   }
 
+  /** a scripted moment: journal-styled, no roman numeral — the island speaking */
+  moment(kicker: string, text: string) {
+    this.pushBanner(`<i>${kicker}</i><span>${text}</span>`, 4800, 'journal');
+  }
+
   private pushBanner(html: string, ms: number, cls: string) {
     this.lawQueue.push({ html, ms, cls });
     this.pumpLaw();

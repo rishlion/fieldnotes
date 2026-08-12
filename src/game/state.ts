@@ -1,9 +1,24 @@
 import { mulberry32 } from '../core/rng';
-import { disc, key, distance } from '../core/hex';
-import type { CardId, Clause, GameEvent, RunState, WindChange, WeatherSched } from './types';
+import { disc, key, ring, distance, type Axial } from '../core/hex';
+import type { CardId, Clause, GameEvent, RunState, WindChange, WeatherSched, World } from './types';
 import { generateWorld } from './worldgen';
 import { STARTING_DECK } from './cards';
-import { currentExpeditionNo } from './codexStore';
+import { currentExpeditionNo, fragmentsRead, flagSet } from './codexStore';
+
+/** the ridge where E.V. watched: high ground two or three hexes off the summit */
+function pickRidge(world: World): Axial | null {
+  for (const d of [2, 3]) {
+    let best: Axial | null = null;
+    let bestElev = -1;
+    for (const h of ring(world.peak, d)) {
+      const t = world.tiles.get(key(h.q, h.r));
+      if (!t || (t.t !== 'snow' && t.t !== 'highland')) continue;
+      if (t.elev > bestElev) { bestElev = t.elev; best = h; }
+    }
+    if (best) return best;
+  }
+  return null;
+}
 
 function makeSched(rng: () => number): WeatherSched {
   const windsAt = 7 + Math.floor(rng() * 4);            // 7–10
@@ -119,6 +134,8 @@ export function createRun(
     ledgerCairn: world.cairns.length
       ? world.cairns.reduce((a, b) => (distance(b, world.start) < distance(a, world.start) ? b : a))
       : null,
+    // once fragment ix is read, the ridge waits — until someone stands there
+    ridgeHex: fragmentsRead() >= 9 && !flagSet('ridge') ? pickRidge(world) : null,
   };
 
   // opening reveal around the landing — a free sketch from the ship's rail:

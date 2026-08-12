@@ -1,5 +1,6 @@
 import { createRun } from './game/state';
-import { tryMove, playCard, validTargets, tileAt, finalScore, findPath, moveCostNow, chooseCairnCard } from './game/rules';
+import { tryMove, playCard, validTargets, tileAt, finalScore, findPath, moveCostNow, chooseCairnCard, ghostRoute } from './game/rules';
+import { flagSet, markFlag } from './game/codexStore';
 import { distance, neighbors, type Axial } from './core/hex';
 import type { Clause } from './game/types';
 import { AtlasRenderer } from './render/atlas';
@@ -146,6 +147,11 @@ function processEvents(evts: GameEvent[], opts: { fromCard?: boolean; silent?: b
         sound.step(t?.t, t?.ov === 'ice');
         renderer.playerMoved(e.from, e.to);
         movesMade++;
+        // an echo: her trick, still working
+        if (t?.ov === 'ice' && fragmentsRead() >= 4 && !flagSet('echo:frost')) {
+          markFlag('echo:frost');
+          hud.marginNote('Pell’s trick, still working. — E.V.');
+        }
         break;
       }
       case 'ignite':
@@ -171,6 +177,15 @@ function processEvents(evts: GameEvent[], opts: { fromCard?: boolean; silent?: b
           const left = state.world.cairns.filter((c) => !tileAt(state, c)?.visited).length;
           if (left > 0) {
             hud.marginNote(`day ${state.day} — the cairn's ledger names ${left} more, pencilled where rumour puts them`);
+          }
+        }
+        // old ink beneath the new: their line of march, once per island
+        if (!opts.silent && !ghostTrailThisRun && fragmentsRead() >= 7) {
+          const route = ghostRoute(state, e.hex, state.world.peak);
+          if (route && route.length > 1) {
+            ghostTrailThisRun = true;
+            renderer.ghostTrail = { path: [e.hex, ...route], bornDay: state.day };
+            hud.marginNote('old ink beneath the new — Nº 6’s line of march, three days from fading');
           }
         }
         break;
@@ -200,10 +215,26 @@ function processEvents(evts: GameEvent[], opts: { fromCard?: boolean; silent?: b
       case 'cardchoice':
         hud.showCardChoice(e.a, e.b);
         break;
+      case 'ridge':
+        hud.moment('the ridge', 'From here, E.V. watched them go. It is a long way to watch anyone go.');
+        renderer.startGhostWalk(e.hex);
+        break;
+      case 'button':
+        hud.moment('beneath the top stone', 'A button, small and bone-white. Pell’s. You keep it.');
+        break;
       case 'weather': {
         const t = WEATHER_TOAST[e.phase];
         if (t) hud.toast(`◈ ${t[0]}`, t[1]);
         sound.weatherChange(e.phase);
+        // echoes: the world repeats the story, and E.V. speaks once from the margin
+        if (e.phase === 'storm' && fragmentsRead() >= 6 && !flagSet('echo:storm')) {
+          markFlag('echo:storm');
+          hud.marginNote('under the boats, then. three days. hold. — E.V.');
+        }
+        if (e.phase === 'winter' && fragmentsRead() >= 11 && !flagSet('echo:winter')) {
+          markFlag('echo:winter');
+          hud.marginNote('it is that or count. — E.V.');
+        }
         break;
       }
       case 'clause': {
@@ -223,7 +254,10 @@ function processEvents(evts: GameEvent[], opts: { fromCard?: boolean; silent?: b
       case 'end': {
         if (e.won) {
           renderer.beaconLit = true;
-          renderer.addFloater(state.world.peak, 'the beacon is lit', { color: '#8c2f22', big: true });
+          renderer.twinFlame = fragmentsRead() >= FRAGMENTS.length;
+          renderer.addFloater(state.world.peak,
+            renderer.twinFlame ? 'the beacon is lit — theirs, at last' : 'the beacon is lit',
+            { color: '#8c2f22', big: true });
           sound.beacon();
         } else {
           sound.pageClose();
@@ -276,7 +310,10 @@ function cancelAutoWalk() {
 }
 
 /** Events worth stopping the walk for — the player should be looking. */
-const HALTS = new Set(['discover', 'fragment', 'cairn', 'weather', 'clause', 'chain', 'end']);
+const HALTS = new Set(['discover', 'fragment', 'cairn', 'weather', 'clause', 'chain', 'ridge', 'button', 'end']);
+
+/** the ghost trail appears at most once per island */
+let ghostTrailThisRun = false;
 
 function stepAutoWalk() {
   autoTimer = null;
@@ -455,6 +492,7 @@ function newRun(sameSeed: boolean) {
   if (!sameSeed) seed = (Date.now() ^ (Math.random() * 0x7fffffff)) | 0;
   cancelAutoWalk();
   dailyMode = false;
+  ghostTrailThisRun = false;
   hud.dailyLabel = null;
   run = createRun(seed);
   state = run.state;
@@ -493,6 +531,7 @@ function dailyRecord(): { date: string; score: number; won: boolean; day: number
 function startDaily() {
   cancelAutoWalk();
   dailyMode = true;
+  ghostTrailThisRun = false;
   seed = dailySeed(todayStr());
   // a fixed mid-campaign commission (three clauses), the same for every cartographer
   run = createRun(seed, { expeditionNo: 3 });
@@ -537,6 +576,9 @@ hud.onBegin = () => {
   if (state.ledgerCairn) {
     hud.marginNote('Nº 6’s ledger marks a cairn on this island — pencilled on your chart');
   }
+  if (state.ridgeHex) {
+    hud.marginNote('a ridge is crossed on the chart — stand where E.V. stood');
+  }
   renderer.draw(performance.now()); // the primer's ring should be waiting when the letter lifts
 };
 
@@ -553,7 +595,7 @@ const titleLedger = document.getElementById('t-ledger')!;
   const fragN = fragmentsRead();
   const best = bestScore();
   titleLedger.textContent = exp > 1 || codexN > 0 || fragN > 0
-    ? `expedition nº ${exp} · codex ${codexN} of ${CODEX.length} · journal ${fragN} of ${FRAGMENTS.length}${best > 0 ? ` · best ${best}` : ''}`
+    ? `expedition nº ${exp} · codex ${codexN} of ${CODEX.length} · journal ${fragN} of ${FRAGMENTS.length}${best > 0 ? ` · best ${best}` : ''}${flagSet('button') ? ' · her button, kept' : ''}`
     : '';
 }
 document.getElementById('t-begin')!.addEventListener('click', () => {

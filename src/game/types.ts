@@ -80,6 +80,8 @@ export interface RunState {
   expeditionNo: number;
   /** the cairn Nº 6's water-stained ledger marks — rumoured from day one */
   ledgerCairn: Axial | null;
+  /** the ridge where E.V. watched — set once fragment ix is read, until witnessed */
+  ridgeHex: Axial | null;
 }
 
 export type GameEvent =
@@ -95,6 +97,8 @@ export type GameEvent =
   | { kind: 'discover'; id: string }
   | { kind: 'fragment'; idx: number }
   | { kind: 'cardchoice'; a: CardId; b: CardId }
+  | { kind: 'ridge'; hex: Axial }
+  | { kind: 'button'; hex: Axial }
   | { kind: 'chain'; n: number; at: Axial }
   | { kind: 'score'; n: number; at?: Axial; label?: string }
   | { kind: 'wind'; dir: number }

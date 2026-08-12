@@ -1,7 +1,7 @@
 import { DIRS, key, neighbors, disc, distance, type Axial } from '../core/hex';
 import { mulberry32 } from '../core/rng';
 import type { RunState, Tile, GameEvent, CardId, Terrain, WeatherPhase, WeatherSched } from './types';
-import { unlockCodex, readNextFragment } from './codexStore';
+import { unlockCodex, readNextFragment, fragmentsRead, flagSet, markFlag } from './codexStore';
 import { FRAGMENTS } from './story';
 
 export const MOVE_COST: Partial<Record<Terrain, number>> = {
@@ -401,6 +401,23 @@ export function tryMove(s: RunState, to: Axial): GameEvent[] {
     // and every cairn holds the next page of Nº 6's journal, until it is whole
     const frag = readNextFragment(FRAGMENTS.length);
     if (frag !== null) ev.push({ kind: 'fragment', idx: frag });
+    // the col cairn keeps something smaller than a page
+    if (fragmentsRead() >= 10 && !flagSet('button') && s.world.cairns.length > 0) {
+      const col = s.world.cairns.reduce((a, b) =>
+        distance(b, s.world.peak) < distance(a, s.world.peak) ? b : a);
+      if (col.q === to.q && col.r === to.r) {
+        markFlag('button');
+        ev.push({ kind: 'button', hex: to });
+      }
+    }
+  }
+
+  // the ridge: stand where E.V. stood, and see what they saw
+  if (s.ridgeHex && to.q === s.ridgeHex.q && to.r === s.ridgeHex.r) {
+    s.ridgeHex = null;
+    markFlag('ridge');
+    chartAround(s, to, 3, ev); // the long look
+    ev.push({ kind: 'ridge', hex: to });
   }
 
   // chart what we can see
@@ -473,6 +490,45 @@ export function pathSupplyCost(s: RunState, path: Axial[]): number {
     paid += moveCostNow(s, tileAt(s, h)) ?? 0;
   });
   return paid;
+}
+
+/**
+ * Nº 6's line of march: a route between two points over base terrain, charted or not —
+ * they walked this ground before it was anyone's map.
+ */
+export function ghostRoute(s: RunState, from: Axial, to: Axial): Axial[] | null {
+  const startK = key(from.q, from.r);
+  const dist = new Map<string, number>([[startK, 0]]);
+  const prev = new Map<string, string>();
+  const open: [number, Axial][] = [[0, from]];
+  while (open.length) {
+    open.sort((a, b) => a[0] - b[0]);
+    const [d, h] = open.shift()!;
+    if (d > (dist.get(key(h.q, h.r)) ?? Infinity)) continue;
+    if (h.q === to.q && h.r === to.r) break;
+    for (const n of neighbors(h)) {
+      const t = tileAt(s, n);
+      const c = moveCost(t);
+      if (c === null) continue;
+      const nk = key(n.q, n.r);
+      const nd = d + c;
+      if (nd < (dist.get(nk) ?? Infinity)) {
+        dist.set(nk, nd);
+        prev.set(nk, key(h.q, h.r));
+        open.push([nd, n]);
+      }
+    }
+  }
+  const toK = key(to.q, to.r);
+  if (!dist.has(toK)) return null;
+  const path: Axial[] = [];
+  let cur = toK;
+  while (cur !== startK) {
+    const [q, r] = cur.split(',').map(Number);
+    path.unshift({ q, r });
+    cur = prev.get(cur)!;
+  }
+  return path;
 }
 
 /** Resolve the cairn's cache: take one of the two offered cards (or neither), then a blind second. */

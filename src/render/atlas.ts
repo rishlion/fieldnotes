@@ -81,6 +81,17 @@ export class AtlasRenderer {
     this.moveAnim = { from, to, t0: performance.now() };
   }
 
+  /** Nº 6's line of march: old ink under the new, three days from fading */
+  ghostTrail: { path: Axial[]; bornDay: number } | null = null;
+  /** the beacon lit twice — theirs, at last */
+  twinFlame = false;
+  /** the ridge vignette: two shapes climbing toward the summit, dissolving */
+  private ghostWalk: { from: Axial; t0: number } | null = null;
+
+  startGhostWalk(from: Axial) {
+    this.ghostWalk = { from, t0: performance.now() };
+  }
+
   /* ship-to-shore arrival: a short inked crossing before the letter */
   private arrival: { t0: number; dur: number; onDone: () => void } | null = null;
 
@@ -115,6 +126,9 @@ export class AtlasRenderer {
     this.chartVeiled = true;
     this.tutHex = null;
     this.moveAnim = null;
+    this.ghostTrail = null;
+    this.ghostWalk = null;
+    this.twinFlame = false;
     this.layout();
   }
 
@@ -699,6 +713,8 @@ export class AtlasRenderer {
     this.drawRumor(g);
     this.drawCairnRumors(g);
     this.drawSettles(g, now);
+    this.drawGhostTrail(g);
+    this.drawRidgeMark(g);
     this.drawTrail(g);
     this.drawStepDots(g);
     this.drawTutMark(g, now);
@@ -706,9 +722,84 @@ export class AtlasRenderer {
     this.drawHover(g);
     this.drawFires(g, now);
     this.drawPlayer(g, now);
+    this.drawGhostWalk(g, now);
     this.drawWeather(g, now);
     this.drawFloaters(g, now);
     this.drawArrival(g, now);
+  }
+
+  /** the old ink: Nº 6's route, pale beneath the player's own wax-red line */
+  private drawGhostTrail(g: CanvasRenderingContext2D) {
+    if (!this.ghostTrail || this.chartVeiled) return;
+    const age = this.state.day - this.ghostTrail.bornDay;
+    if (age >= 3 || this.state.over) {
+      this.ghostTrail = null; // the rain takes it
+      return;
+    }
+    const pts = this.ghostTrail.path.map((h) => this.center(h));
+    if (pts.length < 2) return;
+    g.save();
+    g.setLineDash([4, 6]);
+    g.strokeStyle = `rgba(110,90,60,${0.4 - age * 0.11})`;
+    g.lineWidth = 1.6;
+    g.beginPath();
+    g.moveTo(pts[0].x, pts[0].y);
+    for (let i = 1; i < pts.length - 1; i++) {
+      const mx = (pts[i].x + pts[i + 1].x) / 2, my = (pts[i].y + pts[i + 1].y) / 2;
+      g.quadraticCurveTo(pts[i].x, pts[i].y, mx, my);
+    }
+    g.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
+    g.stroke();
+    g.restore();
+  }
+
+  /** the pencil ✕ on the ridge where E.V. stood */
+  private drawRidgeMark(g: CanvasRenderingContext2D) {
+    const h = this.state.ridgeHex;
+    if (!h || this.chartVeiled || this.arrival || this.state.over) return;
+    const c = this.center(h);
+    const r = this.S * 0.3;
+    g.save();
+    g.strokeStyle = 'rgba(90,70,45,.55)';
+    g.lineWidth = 1.8;
+    g.lineCap = 'round';
+    g.beginPath();
+    g.moveTo(c.x - r, c.y - r * 0.8); g.lineTo(c.x + r, c.y + r * 0.8);
+    g.moveTo(c.x - r, c.y + r * 0.8); g.lineTo(c.x + r * 0.9, c.y - r);
+    g.stroke();
+    g.restore();
+  }
+
+  /** two shapes on the snow, climbing — the way paper takes ink, in reverse */
+  private drawGhostWalk(g: CanvasRenderingContext2D, now: number) {
+    if (!this.ghostWalk) return;
+    const t = (now - this.ghostWalk.t0) / 5200;
+    if (t >= 1) {
+      this.ghostWalk = null;
+      return;
+    }
+    const a = this.center(this.ghostWalk.from);
+    const b = this.center(this.state.world.peak);
+    const u = Math.min(1.6, Math.max(0.9, this.S / BASE)) * 0.85;
+    for (let i = 0; i < 2; i++) {
+      const p = Math.max(0, Math.min(1, t * 1.15 - i * 0.12));
+      const e = 1 - Math.pow(1 - p, 2);
+      const x = a.x + (b.x - a.x) * e + (i === 0 ? -4 : 5);
+      const y = a.y + (b.y - a.y) * e + (i === 0 ? 1 : 3);
+      const fade = Math.max(0, 0.5 * (1 - t * t) * (p > 0 ? 1 : 0));
+      if (fade <= 0) continue;
+      g.save();
+      g.globalAlpha = fade;
+      g.translate(x, y + Math.sin(now / 300 + i * 2) * 0.8);
+      g.scale(u, u);
+      g.strokeStyle = '#6b5a3e';
+      g.fillStyle = '#6b5a3e';
+      g.lineWidth = 1.8;
+      g.lineCap = 'round';
+      g.beginPath(); g.moveTo(0, 5); g.lineTo(0, -3); g.stroke();
+      g.beginPath(); g.arc(0, -6, 3, 0, 7); g.fill();
+      g.restore();
+    }
   }
 
   /** the crossing: an inked ship draws its wake from the page edge to the landing */
@@ -1215,6 +1306,18 @@ export class AtlasRenderer {
         g.beginPath();
         g.arc((rnd() - 0.5) * BASE * 1.4 + Math.sin(now / 260 + i) * 4, -BASE * 0.3 - ph * BASE * 2.6, 1.8, 0, 7);
         g.fill();
+      }
+      // the journal whole: a second, smaller flame — theirs, at last
+      if (this.twinFlame) {
+        g.globalAlpha = 1;
+        g.strokeStyle = 'rgba(140,50,20,.75)';
+        g.lineWidth = 1.5;
+        const h3 = BASE * 0.6 * (0.85 + Math.sin(now / 210 + 2) * 0.15);
+        g.beginPath();
+        g.moveTo(8, 4);
+        g.quadraticCurveTo(6, -h3 * 0.4, 12, -h3);
+        g.quadraticCurveTo(17, -h3 * 0.4, 16, 4);
+        g.stroke();
       }
       g.restore();
     }
