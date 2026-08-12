@@ -15,11 +15,14 @@ margin notes, end-tally count-up · **the Lost Expedition Nº 6** (12-fragment j
 at cairns, cairn rumours, when-first card blurbs, letter-as-search) · title page +
 ship-to-shore arrival · the primer (playable, pointing, dismissable tutorial) ·
 **the daily expedition** (shared date seed, one attempt, settled result on the title)
-· cairn cache draft (pick 1 of 2) · spoiler-free copyable report · chemistry pass
-one (codex 16 laws: steam both ways, meltwater, regrowth, fords, floods, cascades) ·
-**Phase 3 scripted moments** (ghost ink trail, the ridge with its fading walkers,
-Pell's button, the twin flame, E.V.'s margin echoes) · the hidden-panel input bug
-found in Rishabh's live playtest, fixed and redeployed.
+· cairn cache draft (pick 1 of 2, always two different cards when the deck allows) ·
+spoiler-free copyable report · chemistry pass one (codex 16 laws: steam both ways,
+meltwater, regrowth, fords, floods, cascades) · **Phase 3 scripted moments** (ghost
+ink trail, the ridge with its fading walkers, Pell's button, the twin flame, E.V.'s
+margin echoes) · the hidden-panel input bug found in Rishabh's live playtest, fixed
+and redeployed · **the cairn moment sequenced** (banner queue holds during modals;
+draft → law → sticky click-to-dismiss journal page; daily-letter guard for
+first-timers; 2.2s rejection floaters) — deployed to both hosts 2026-08-12.
 
 **Known gaps:** balance is feel-tested, not field-tested — no defeat has ever been
 witnessed; mobile/touch untested and all hover-taught information (route previews,
@@ -27,14 +30,12 @@ terrain names, card blurbs) has no tap equivalent; audio has never been mixed by
 ear; island memory unbuilt; the codex could grow to 18–20.
 
 **Fresh playtest, 2026-08-12 (Claude, cleared storage):** exp 1 won day 11/20,
-7 supplies left, score 585, 4 laws, never tense. Top finding: at the first cairn
-the law banner, journal fragment, and cache-draft modal all fire at once — the
-banner queue (law 2.8s → fragment 5.2s, `hud.ts`) keeps draining behind the modal,
-so **Fragment I plays unseen**. The story hook every fresh player should hit is
-currently swallowed by UI. Also: a brand-new player can open the daily (exp-3
-commission) as their first-ever game; win required only Survey/Frost/Vine — chain
-bonuses read 0 at the tally. Cliff-click floaters exist in code (1.5s,
-`atlas.ts`) — pane couldn't confirm feel; verify live.
+7 supplies left, score 585, 4 laws, never tense. Top finding — the first cairn
+fired law banner + journal fragment + cache-draft modal at once, so Fragment I
+played unseen — **fixed and deployed same day** (item 1 below). Still open, waiting
+on field data: the run never got tense (supports the staged supply dials), and the
+win needed only Survey/Frost/Vine — fire, wind, stone, and every chain bonus went
+untouched (item 5).
 
 ## The next moves, ranked by value
 
@@ -70,7 +71,8 @@ bonuses read 0 at the tally. Cliff-click floaters exist in code (1.5s,
 **Ops notes:** Pages deploys via `npm run deploy:pages` (the gh token lacks workflow
 scope for Actions); Railway via `railway up --service fieldnotes --detach`; any new
 overlay panel must disarm its `.hidden *` subtree (pointer-events) or its invisible
-buttons will haunt the page.
+buttons will haunt the page; any new modal must hold the banner queue on open and
+pump it on close (see `CLAUDE.md` for the full list of hard rules and the dev hook).
 
 ---
 

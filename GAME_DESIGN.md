@@ -131,16 +131,22 @@ moments · the daily expedition, cairn draft, and shareable report · the primer
 title page + ship-to-shore arrival · seed-priced difficulty · deployed to two hosts
 (URLs in README).
 
-Still open, in rough order of pull:
-1. **Island memory** — retrying a seed keeps the old chart as faint pencil (the last
+Still open (execution order lives in IMPROVEMENT_PLAN.md's ranked list — this is
+the design view):
+1. **Give the chemistry a reason** — a run can be won without ever touching fire,
+   wind, or stone, and chain bonuses read 0 at the tally. Candidate shapes (pick
+   together before building): a chain-bonus commission clause on exp 2+, cache
+   drafts biased toward combo pairs, or a "spectacle" side-commission.
+2. **Island memory** — retrying a seed keeps the old chart as faint pencil (the last
    Phase 3 item).
-2. **Chemistry pass two** — codex toward 18–20 laws; every element × terrain answers
+3. **Chemistry pass two** — codex toward 18–20 laws; every element × terrain answers
    or fizzles with flavor.
-3. **Balance follow-through** — from field data; defeat should be witnessed, not
+4. **Balance follow-through** — from field data; defeat should be witnessed, not
    theoretical.
-4. **Mobile/touch pass** — hover-taught information needs tap equivalents.
-5. **Audio tuning pass** — mix levels and voice character, adjusted by ear.
-6. **The long game** — island archetypes, satchel drafting, codex-milestone card
+5. **Mobile/touch pass** — hover-taught information needs tap equivalents; gates the
+   share loop.
+6. **Audio tuning pass** — mix levels and voice character, adjusted by ear.
+7. **The long game** — island archetypes, satchel drafting, codex-milestone card
    unlocks, PNG expedition report, daily streaks.
 
 ## Dev
@@ -151,4 +157,6 @@ npm run typecheck  # tsc --noEmit
 npm run build      # production build
 ```
 
-`window.__fieldnotes` exposes `{ state, center(q,r) }` in dev for console playtesting.
+`window.__fieldnotes` exposes `{ state, center(q,r), renderer }` in dev for console
+playtesting — mutate `state.deck`/`state.player` for deterministic setups, use
+`center(q,r)` to aim clicks. Agent-specific gotchas and hard rules live in `CLAUDE.md`.

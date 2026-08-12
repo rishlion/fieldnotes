@@ -2,7 +2,7 @@
 
 A browser roguelike about charting an island that doesn't exist until you ink it.
 All art and sound are generative code — zero assets. Design in `GAME_DESIGN.md`,
-working log in `IMPROVEMENT_PLAN.md`.
+working log in `IMPROVEMENT_PLAN.md`, agent orientation in `CLAUDE.md`.
 
 **Play it:**
 - https://rishlion.github.io/fieldnotes/ (GitHub Pages — redeploy with `npm run deploy:pages`)
@@ -11,8 +11,10 @@ working log in `IMPROVEMENT_PLAN.md`.
 **Where it stands (2026-08-12):** the full loop is live — seeded islands, element-card
 chemistry with a 16-law discovery codex, the Lost Expedition Nº 6 story told through
 cairn journals and scripted moments, a guided first-expedition primer, a shared-seed
-daily with one attempt and a copyable spoiler-free report. Current focus: field-testing
-with real players, a mobile/touch pass, and balance follow-through. The ranked plan
+daily with one attempt and a copyable spoiler-free report. The first-cairn story beat
+now sequences cleanly (cache draft → law → journal page, read at your own pace), and
+a fresh-player pass closed the pre-field-test polish list. Current focus: field-testing
+with real players, then a mobile/touch pass and balance follow-through. The ranked plan
 lives at the top of `IMPROVEMENT_PLAN.md`; systems detail in `GAME_DESIGN.md`.
 
 ## Dev
