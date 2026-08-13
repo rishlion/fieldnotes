@@ -9,8 +9,8 @@ generative code. Vite + TypeScript, vanilla Canvas 2D (map) + DOM/CSS (UI).
 Systems and design intent live in `GAME_DESIGN.md`. Below the divider in
 IMPROVEMENT_PLAN.md is history; don't re-fix things listed there.
 
-Live at https://rishlion.github.io/fieldnotes/ and
-https://fieldnotes-production-dce3.up.railway.app
+Live at https://rishlion.github.io/fieldnotes/ — the one canonical host
+(the Railway deployment was retired 2026-08-13; don't resurrect it).
 
 ## Commands
 
@@ -19,12 +19,12 @@ npm run dev            # vite dev server on :5173
 npm run typecheck      # tsc --noEmit — run after every change; keep it clean
 npm run build          # production build → dist/ (static, relative paths)
 npm run deploy:pages   # build + force-push dist/ to the gh-pages branch
-railway up --service fieldnotes --detach   # deploy to Railway (needs --service)
 ```
 
 The gh CLI account (rishlion) has no workflow scope — Pages deploys from the
-built `gh-pages` branch via the script above, never via Actions. After deploying,
-verify both hosts serve the new bundle (curl for a marker string from the change).
+built `gh-pages` branch via the script above, never via Actions; pushing `main`
+does NOT deploy. After deploying, verify the live site serves the new bundle
+(curl for a marker string from the change).
 
 ## Architecture (4.6k lines total — read the file you're touching, it's short)
 

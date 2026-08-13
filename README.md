@@ -4,9 +4,9 @@ A browser roguelike about charting an island that doesn't exist until you ink it
 All art and sound are generative code — zero assets. Design in `GAME_DESIGN.md`,
 working log in `IMPROVEMENT_PLAN.md`, agent orientation in `CLAUDE.md`.
 
-**Play it:**
-- https://rishlion.github.io/fieldnotes/ (GitHub Pages — redeploy with `npm run deploy:pages`)
-- https://fieldnotes-production-dce3.up.railway.app (Railway — redeploy with `railway up --service fieldnotes --detach`)
+**Play it:** https://rishlion.github.io/fieldnotes/ — the canonical link
+(GitHub Pages; redeploy with `npm run deploy:pages`). The old Railway
+deployment was retired 2026-08-13.
 
 **Where it stands (2026-08-12):** the full loop is live — seeded islands, element-card
 chemistry with a 16-law discovery codex, the Lost Expedition Nº 6 story told through

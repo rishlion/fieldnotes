@@ -128,8 +128,8 @@ starts on the first user gesture per browser policy.
 Built since v1 (see IMPROVEMENT_PLAN.md for the log): guild contracts & the weather
 arc · chemistry pass one (codex 16 laws) · the Lost Expedition Nº 6 with its scripted
 moments · the daily expedition, cairn draft, and shareable report · the primer ·
-title page + ship-to-shore arrival · seed-priced difficulty · deployed to two hosts
-(URLs in README).
+title page + ship-to-shore arrival · seed-priced difficulty · deployed to GitHub
+Pages (the canonical link, in the README).
 
 Still open (execution order lives in IMPROVEMENT_PLAN.md's ranked list — this is
 the design view):

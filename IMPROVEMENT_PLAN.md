@@ -2,10 +2,9 @@
 
 ## Status — 2026-08-12
 
-Live at **https://rishlion.github.io/fieldnotes/** and
-**https://fieldnotes-production-dce3.up.railway.app** · repo
-**github.com/rishlion/fieldnotes**. This block is the current truth; everything
-below "the build log" is history.
+Live at **https://rishlion.github.io/fieldnotes/** (the canonical link — the
+Railway host was retired 2026-08-13) · repo **github.com/rishlion/fieldnotes**.
+This block is the current truth; everything below "the build log" is history.
 
 **Built and verified:** core loop · Inked Atlas art + fully synthesized audio ·
 seed-priced difficulty (a Dijkstra beeline anchors supplies and deadline; every
@@ -68,8 +67,8 @@ untouched (item 5).
 9. **Phase 4 long game** (after validation) — island archetypes · satchel drafting ·
    codex-milestone card unlocks · PNG map report · daily streaks.
 
-**Ops notes:** Pages deploys via `npm run deploy:pages` (the gh token lacks workflow
-scope for Actions); Railway via `railway up --service fieldnotes --detach`; any new
+**Ops notes:** Pages is the only host — deploy via `npm run deploy:pages` (the gh
+token lacks workflow scope for Actions; pushing `main` does not deploy); any new
 overlay panel must disarm its `.hidden *` subtree (pointer-events) or its invisible
 buttons will haunt the page; any new modal must hold the banner queue on open and
 pump it on close (see `CLAUDE.md` for the full list of hard rules and the dev hook).
