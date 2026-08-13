@@ -122,9 +122,9 @@ export class Hud {
     } else {
       mode.hidden = true;
     }
-    // a returning cartographer knows the four verbs — the letter gets out of the way
+    // a returning cartographer knows the work — the letter gets out of the way
     const returning = s.expeditionNo > 1;
-    (document.getElementById('intro-goals') as HTMLElement).hidden = returning;
+    (document.getElementById('intro-first') as HTMLElement).hidden = returning;
     (document.getElementById('intro-standing') as HTMLElement).hidden = !returning;
     // the daily is a mid-campaign commission — warn a cartographer who hasn't charted their first
     (document.getElementById('intro-daily-note') as HTMLElement).hidden =

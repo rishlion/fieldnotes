@@ -46,7 +46,7 @@ does NOT deploy. After deploying, verify the live site serves the new bundle
   hex math, seeded rng.
 
 localStorage keys: `fieldnotes.codex.v1` (laws), `fieldnotes.fragments.v1`,
-`fieldnotes.onboard.v2` (primer step), `fieldnotes.daily.v1` (one attempt — written
+`fieldnotes.onboard.v3` (primer step), `fieldnotes.daily.v1` (one attempt — written
 on seal-break, NOT on peeking at the letter), `fieldnotes.flags.v1` (career moments).
 Fresh-player test = `localStorage.clear()` on the dev origin.
 

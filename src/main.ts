@@ -45,7 +45,7 @@ const clauseLabel = (c: Clause) =>
    advances only when the player actually does it, dissolves if ignored long enough,
    and can be waved away with the ✕ on the whisper line. */
 
-const ONBOARD_KEY = 'fieldnotes.onboard.v2';
+const ONBOARD_KEY = 'fieldnotes.onboard.v3'; // v3: the chart whisper joined, shifting every step's index
 let onboardStep = 0;
 try { onboardStep = parseInt(localStorage.getItem(ONBOARD_KEY) ?? '0', 10) || 0; } catch { /* ignore */ }
 let movesMade = 0;
@@ -63,6 +63,8 @@ interface PrimerStep {
 const PRIMER: PrimerStep[] = [
   { hint: 'walk — click the ringed hex beside your cartographer', mark: 'hex',
     done: () => movesMade >= 1 },
+  { hint: 'see how the map inks itself where you tread — every new hex is the guild’s coin', mark: null,
+    done: () => movesMade - stepMoves >= 1 },
   { hint: 'every step is a day, and days eat supplies — the ledger is kept above', mark: null,
     done: () => movesMade - stepMoves >= 2 },
   // the card steps assume the card is in hand (expedition 1 guarantees it; the

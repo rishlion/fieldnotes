@@ -237,9 +237,8 @@ body.arriving #hint,body.arriving #toasts,body.arriving #mnotes{opacity:0;pointe
 .intro-caution{font-size:12.5px;color:#8c2f22;border-left:2px solid rgba(140,47,34,.45);padding-left:10px}
 .intro-mode{font-style:italic;font-size:11.5px;letter-spacing:.02em;color:#7a6544;margin:2px 0 0}
 .intro-commission .gloss{display:block;font-size:11px;font-style:italic;color:#8a7550;margin:1px 0 2px 18px}
-.intro-goals{list-style:none;margin:10px 0 4px}
-.intro-goals li{font-size:13.5px;line-height:1.5;padding:7px 0;border-bottom:1px dashed rgba(90,70,40,.25)}
-.intro-goals b{color:#8c2f22;letter-spacing:.03em}
+.intro-teach{font-style:italic;font-size:12px;letter-spacing:.02em;color:#7a6544;margin:10px 0 2px;
+  padding-top:9px;border-top:1px dashed rgba(90,70,40,.25)}
 .intro-commission{margin-top:14px;padding:11px 14px;border:1.5px solid rgba(140,47,34,.45);border-radius:3px}
 .intro-commission>b{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#8c2f22}
 .intro-commission ul{list-style:none;margin:7px 0 4px}

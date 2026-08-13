@@ -21,7 +21,13 @@ ink trail, the ridge with its fading walkers, Pell's button, the twin flame, E.V
 margin echoes) · the hidden-panel input bug found in Rishabh's live playtest, fixed
 and redeployed · **the cairn moment sequenced** (banner queue holds during modals;
 draft → law → sticky click-to-dismiss journal page; daily-letter guard for
-first-timers; 2.2s rejection floaters) — deployed to both hosts 2026-08-12.
+first-timers; 2.2s rejection floaters) — deployed to both hosts 2026-08-12 ·
+**the letter slimmed (2026-08-13)**: the first-expedition letter is three lines
+(goal · Nº 6 hook · "the rest is learned underfoot") plus the commission — the
+four-verb instruction list is gone; the primer teaches those verbs in play, with
+a new chart whisper after the first step (`fieldnotes.onboard.v3` — indices
+shifted). Returning letters unchanged. Verified fresh in-browser: letter reads in
+seconds, whispers sequence walk → chart → supplies → survey, daily letter intact.
 
 **Known gaps:** balance is feel-tested, not field-tested — no defeat has ever been
 witnessed; mobile/touch untested and all hover-taught information (route previews,

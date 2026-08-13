@@ -83,7 +83,10 @@ assets. Palette anchored on parchment (#e9dcbe), sepia ink (#4a3826), wax red (#
   bookmark line, audio unlocks on "open the journal") → ship-to-shore ink crossing
   (~3 s, skippable; the chart stays veiled until the ship beaches) → the landing inks
   in with sound → the guild letter. Replayed, sans title, on every new expedition.
-- **The primer** (playable tutorial, first expedition only): seven gated whisper
+- **The guild letter** (first expedition): three lines — the goal, the Nº 6 hook, and
+  a promise that the rest is whispered underfoot — plus the commission. The old
+  four-verb instruction list is gone; the primer teaches those verbs in play.
+- **The primer** (playable tutorial, first expedition only): eight gated whisper
   steps that point at the exact thing to do — a pencil ring on the hex to walk, a
   glowing card to play (Survey, then Frost at the water's edge, which fires a real
   law and teaches the discovery loop live). The opening hand guarantees both cards.
