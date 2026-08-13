@@ -111,6 +111,17 @@ export class Hud {
   showIntro(s: RunState) {
     this.clearBanners(); // a new expedition starts with a clean page
     this.introH2.textContent = this.dailyLabel ? 'The Daily Expedition' : `Expedition Nº ${s.expeditionNo}`;
+    // one line so the reader knows whose island this is — the shared one, or their own
+    const mode = document.getElementById('intro-mode') as HTMLElement;
+    if (this.dailyLabel) {
+      mode.textContent = 'every cartographer charts this same island today — one attempt, then the seal sets';
+      mode.hidden = false;
+    } else if (s.expeditionNo > 1) {
+      mode.textContent = 'your own commission, at your own pace — the ledger remembers';
+      mode.hidden = false;
+    } else {
+      mode.hidden = true;
+    }
     // a returning cartographer knows the four verbs — the letter gets out of the way
     const returning = s.expeditionNo > 1;
     (document.getElementById('intro-goals') as HTMLElement).hidden = returning;
@@ -122,6 +133,13 @@ export class Hud {
     for (const c of s.contract) {
       const li = document.createElement('li');
       li.textContent = clauseText(c);
+      if (c.kind === 'cairns') {
+        // the one clause whose verb isn't obvious — say how it's done
+        const gloss = document.createElement('span');
+        gloss.className = 'gloss';
+        gloss.textContent = 'walk to their stones — the survey makes itself';
+        li.appendChild(gloss);
+      }
       this.introCommission.appendChild(li);
     }
     this.introPanel.classList.remove('hidden');

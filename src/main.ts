@@ -65,12 +65,15 @@ const PRIMER: PrimerStep[] = [
     done: () => movesMade >= 1 },
   { hint: 'every step is a day, and days eat supplies — the ledger is kept above', mark: null,
     done: () => movesMade - stepMoves >= 2 },
+  // the card steps assume the card is in hand (expedition 1 guarantees it; the
+  // daily's hand is dealt blind) — a whisper naming a card the player doesn't
+  // hold teaches nothing, so those steps pass themselves by
   { hint: 'the satchel now — play the Survey; it charts without a single step', mark: 'survey',
-    done: () => surveyPlayed || movesMade - stepMoves >= 6 },
+    done: () => surveyPlayed || !state.hand.includes('survey') || movesMade - stepMoves >= 6 },
   { hint: 'a card spends no day and costs no ration — only walking does', mark: null,
     done: () => movesMade - stepMoves >= 1 || frostPlayed },
   { hint: 'the island has laws — stand at the water’s edge and strike the Frost at it', mark: 'frost',
-    done: () => frostPlayed || movesMade - stepMoves >= 8 },
+    done: () => frostPlayed || !state.hand.includes('frost') || movesMade - stepMoves >= 8 },
   { hint: 'what the island teaches is inked in the ✦ field codex, forever', mark: null,
     done: () => movesMade - stepMoves >= 2 },
   { hint: 'Nº 6 marked a cairn on your chart — their stones provision those who follow', mark: null,
