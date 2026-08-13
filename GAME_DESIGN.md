@@ -100,6 +100,11 @@ assets. Palette anchored on parchment (#e9dcbe), sepia ink (#4a3826), wax red (#
   triggers the opening glance: the camera eases out for 3.6s so landing and
   summit share the frame, with one moment banner ("Dark since Nº 6. That is
   where you are going."). The Journey move: the mountain is always on the horizon.
+- **The pocket atlas** (≤600px): the journal folds to phone size — smaller
+  wordmark, no stamp, tighter chips, 82px cards — and the camera measures the
+  HUD to keep the chart clear of it. Touch replaces hover with intent-then-
+  confirm: the first tap on a far hex draws the pencil route with its cost and
+  days, the second tap walks it; neighbour steps stay a single tap.
 - **The primer** (playable tutorial, first expedition only): eight gated whisper
   steps that point at the exact thing to do — a pencil ring on the hex to walk, a
   glowing card to play (Survey, then Frost at the water's edge, which fires a real

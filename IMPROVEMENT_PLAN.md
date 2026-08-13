@@ -50,9 +50,9 @@ and summit together, one moment banner names the goal. Verified: target scale
 46 → 24 → 46, banner plays, sketch reads at the page edge.
 
 **Known gaps:** balance is feel-tested, not field-tested — no defeat has ever been
-witnessed; mobile/touch untested and all hover-taught information (route previews,
-terrain names, card blurbs) has no tap equivalent; audio has never been mixed by
-ear; island memory unbuilt; the codex could grow to 18–20.
+witnessed; mobile is built and emulator-verified (see item 3) but untested on real
+phones; audio has never been mixed by ear; island memory unbuilt; the codex could
+grow to 18–20.
 
 **Fresh playtest, 2026-08-12 (Claude, cleared storage):** exp 1 won day 11/20,
 7 supplies left, score 585, 4 laws, never tense. Top finding — the first cairn
@@ -74,9 +74,17 @@ untouched (item 5).
 2. **Field-test the loop** — Rishabh plus two or three friends, zero code. Does the
    daily + report actually get shared? Where do fresh players stall? Every dial
    below waits on this data.
-3. **Mobile playability pass** — share links get opened on phones, and touch has no
-   hover. The route preview, terrain labels, and card blurbs need tap equivalents;
-   layout and hit targets need a small-screen check. This gates the share loop.
+3. ~~**Mobile playability pass**~~ ✅ BUILT 2026-08-13 — the pocket atlas: a
+   ≤600px media query (wordmark 11vw, stamp hidden, tighter chips/commission,
+   82px cards, repositioned toasts/notes/whisper) · the camera ducks the taller
+   mobile HUD (`topOffset()` measures #topleft, cached 400ms) and gutters
+   tighten · the summit rumour clamps below the HUD · on hover-less devices a
+   first tap on a far hex inks the route preview (cost + days, the same
+   `drawHover` a mouse gets) and a second tap on the same hex walks it — one
+   tap never commits unseen days; neighbour steps stay one-tap. Verified in the
+   pane's mobile emulation (375×812, touch): layout clean at title/letter/
+   in-game, tap-confirm arms then walks, desktop unchanged. Still untested on
+   real phones — fold that into the field test (item 2).
 4. **Balance follow-through** — from field data plus the 08-12 run (another
    comfortable day-11 win; zero supply anxiety): are day-11/12 wins common? does
    starvation ever land? full-seal rate? Staged dials: supplies margin +4 → +3,

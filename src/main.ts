@@ -306,6 +306,12 @@ function processEvents(evts: GameEvent[], opts: { fromCard?: boolean; silent?: b
 let autoWalk: Axial[] = [];
 let autoTimer: number | null = null;
 
+/* on a screen with no hover, the first tap on a far hex shows the pencil route
+   and its price — the same preview a mouse gets for free — and a second tap on
+   the same hex sets out. one tap never commits days it hasn't shown. */
+const noHover = window.matchMedia('(hover: none)').matches;
+let tapPreview: Axial | null = null;
+
 function cancelAutoWalk() {
   autoWalk = [];
   if (autoTimer !== null) {
@@ -415,6 +421,7 @@ cv.addEventListener('pointerdown', (e) => {
   const d = distance(state.player, hex);
   if (d === 0) return;
   if (d === 1) {
+    tapPreview = null; // stepping puts any far-off intention away
     const evts = tryMove(state, hex);
     if (evts.length === 0) {
       const t = tileAt(state, hex);
@@ -436,12 +443,19 @@ cv.addEventListener('pointerdown', (e) => {
     const route = findPath(state, hex);
     if (!route) {
       renderer.addFloater(hex, 'no way through', { color: '#8c2f22', ttl: 2200 });
+    } else if (noHover && !(tapPreview && tapPreview.q === hex.q && tapPreview.r === hex.r)) {
+      tapPreview = hex;
+      renderer.hover = hex; // the route inks itself; a second tap walks it
+      renderer.draw(performance.now());
+      return;
     } else {
+      tapPreview = null;
       autoWalk = route.path;
       stepAutoWalk();
       return;
     }
   }
+  tapPreview = null;
   renderer.draw(performance.now());
 });
 
@@ -456,6 +470,7 @@ window.addEventListener('keydown', (e) => {
       return;
     }
     cancelAutoWalk();
+    tapPreview = null;
     hud.clearSelection(state);
     renderer.targets = [];
     hud.hint(null);

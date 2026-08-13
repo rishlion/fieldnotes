@@ -286,3 +286,34 @@ body.arriving #hint,body.arriving #toasts,body.arriving #mnotes{opacity:0;pointe
   border-bottom:1px dashed rgba(90,70,40,.3)}
 #end-tally li.total{font-weight:700;font-size:16px;border-bottom:none;margin-top:4px}
 #end-buttons{display:flex;gap:10px}
+
+/* ---------- the pocket atlas: small screens ---------- */
+/* the journal folds to fit a coat pocket — the wordmark shrinks, the stamp
+   stays home, chips tighten, and the hand deals slimmer cards */
+@media (max-width:600px){
+  .t-word{font-size:11vw;letter-spacing:.16em}
+  #title{top:10px;right:12px}
+  #title h1{font-size:16px;letter-spacing:.1em}
+  #title p{font-size:8.5px;letter-spacing:.16em}
+  #stamp{display:none}
+  #codex-btn,#sound-btn,#newgame-btn{font-size:11px;padding:7px 10px}
+  #topleft{top:10px;left:10px;max-width:64vw;gap:7px}
+  #hud{gap:5px}
+  .chip{font-size:11.5px;padding:5px 9px;gap:4px}
+  .chip svg{width:13px;height:13px}
+  #contract{max-width:190px;padding:7px 10px 8px}
+  #contract li{font-size:11px}
+  #contract b{font-size:8.5px}
+  #toasts{right:10px;top:auto;bottom:236px;max-width:66vw}
+  #mnotes{left:10px;bottom:210px;max-width:62vw}
+  #law-banner{max-width:88vw}
+  #choice-panel{max-width:92vw}
+  #hint{bottom:148px;max-width:88vw;font-size:12.5px}
+  #hint.primer{font-size:13.5px;padding:8px 14px 9px}
+  .card{width:82px;height:118px;margin:0 -9px;padding:8px 7px 7px;border-radius:8px}
+  .card svg{width:26px;height:26px;margin:3px 0 2px}
+  .card .nm{font-size:12px}
+  .card .fx{font-size:9px;line-height:1.25;margin-top:3px}
+  .deckpile{width:52px;height:74px;margin-left:10px}
+  .deckpile b{font-size:14px}
+}

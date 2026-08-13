@@ -134,8 +134,26 @@ export class AtlasRenderer {
 
   /* ---------------- camera ---------------- */
 
-  private availW() { return Math.max(120, this.CW - 130); }
-  private availH() { return Math.max(90, this.CH - 96 - 216); }
+  /** a pocket-sized page: gutters tighten and the chart ducks the taller HUD */
+  private isNarrow() { return this.CW < 600; }
+
+  /** where the chart may begin: below the chips and commission on small
+      screens (measured, cached — the ledger grows as chips wake) */
+  private topOffV = 96;
+  private topOffAt = 0;
+  private topOffset(): number {
+    if (!this.isNarrow()) return 96;
+    const now = performance.now();
+    if (now - this.topOffAt > 400) {
+      this.topOffAt = now;
+      const tl = document.getElementById('topleft');
+      this.topOffV = Math.max(96, (tl ? tl.getBoundingClientRect().bottom : 82) + 14);
+    }
+    return this.topOffV;
+  }
+
+  private availW() { return Math.max(120, this.CW - (this.isNarrow() ? 36 : 130)); }
+  private availH() { return Math.max(90, this.CH - this.topOffset() - (this.isNarrow() ? 250 : 216)); }
 
   /** the opening glance: until this stamp, the far summit shares the frame */
   private glanceUntil = 0;
@@ -188,8 +206,8 @@ export class AtlasRenderer {
     const spanX = maxX - minX + 3.4, spanY = maxY - minY + 3.4;
     this.tS = Math.max(4, Math.min(46, Math.min(aw / spanX, ah / spanY)));
     const wpx = (maxX - minX) * this.tS, wpy = (maxY - minY) * this.tS;
-    this.tOX = 65 + (aw - wpx) / 2 - minX * this.tS;
-    this.tOY = 84 + (ah - wpy) / 2 - minY * this.tS;
+    this.tOX = (this.isNarrow() ? 18 : 65) + (aw - wpx) / 2 - minX * this.tS;
+    this.tOY = (this.topOffset() - 12) + (ah - wpy) / 2 - minY * this.tS;
   }
 
   private tweenCamera(now: number) {
@@ -964,7 +982,9 @@ export class AtlasRenderer {
     if (peakTile?.charted) return;
     const c = this.center(s.world.peak);
     const S = Math.max(15, Math.min(26, this.S));
-    const x0 = 70, x1 = this.CW - 70, y0 = 96, y1 = this.CH - 240;
+    const narrow = this.isNarrow();
+    const x0 = narrow ? 44 : 70, x1 = this.CW - (narrow ? 44 : 70);
+    const y0 = this.topOffset() + 24, y1 = this.CH - (narrow ? 290 : 240);
     const off = c.x < x0 || c.x > x1 || c.y < y0 || c.y > y1;
     const cx = Math.max(x0, Math.min(x1, c.x));
     const cy = Math.max(y0, Math.min(y1, c.y));
