@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FIELDNOTES — an expedition journal</title>
+  <script type="module" crossorigin src="./assets/index-CQE5c1tT.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-CS28z9XE.css">
+</head>
+<body class="arriving">
+  <div id="stage"><canvas id="cv"></canvas></div>
+
+  <div id="title-screen">
+    <div class="t-inner">
+      <h1 class="t-word">FIELDNOTES</h1>
+      <p class="t-sub">an expedition journal</p>
+      <p class="t-ledger" id="t-ledger"></p>
+      <button id="t-begin">open the journal</button>
+      <button id="t-daily"></button>
+    </div>
+    <p class="t-foot">guild of cartographers · survey division</p>
+  </div>
+
+  <div id="overlay">
+    <div id="topleft">
+    <div id="hud">
+      <span class="chip" id="chip-day">Day 1</span>
+      <span class="chip" id="chip-supplies">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14l-1.4 11H6.4L5 9z"/><path d="M8.5 9V6.5a3.5 3.5 0 0 1 7 0V9"/></svg>
+        <b id="supplies-n">26</b><span class="lbl">supplies</span><i id="supplies-extra"></i>
+      </span>
+      <span class="chip" id="chip-charted">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4c-6 1-11 6-13 12l-2 4 4-2c6-2 11-7 12-13z"/><path d="M7 16l-2 5"/></svg>
+        <b id="charted-n">0</b><span class="lbl">charted</span>
+      </span>
+      <span class="chip" id="chip-score">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l2.5 5.6 6 .6-4.5 4 1.3 5.9L12 16l-5.3 3.1L8 13.2l-4.5-4 6-.6L12 3z"/></svg>
+        <b id="score-n">0</b><span class="lbl">score</span>
+      </span>
+      <span class="chip" id="chip-wind">
+        <svg id="wind-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h16M14 6l6 6-6 6"/></svg>
+        <span class="lbl">wind</span>
+        <span class="lbl" id="wind-next"></span>
+      </span>
+    </div>
+    <div id="contract">
+      <b>the commission</b>
+      <ul id="contract-list"></ul>
+    </div>
+    </div>
+
+    <div id="title">
+      <h1>FIELDNOTES</h1>
+      <p id="subtitle">expedition nº 1</p>
+      <button id="codex-btn">✦ field codex</button>
+      <button id="sound-btn">♪ sound on</button>
+      <button id="newgame-btn">✎ new expedition</button>
+      <div id="stamp">Guild of Cartographers<br>survey in progress</div>
+    </div>
+
+    <div id="toasts"></div>
+    <div id="law-banner" class="hidden"></div>
+    <div id="choice-panel" class="hidden">
+      <p class="choice-kicker">beneath the stones — a cache left for those who follow. take one.</p>
+      <div id="choice-cards"></div>
+      <button id="choice-skip">leave it be</button>
+    </div>
+    <div id="mnotes"></div>
+    <div id="hand"></div>
+    <div id="hint"></div>
+
+    <div id="codex-panel" class="hidden">
+      <button id="codex-x" aria-label="close the codex">✕</button>
+      <h2>Field Codex</h2>
+      <p class="codex-sub" id="codex-sub">what the guild has learned of the world's grammar</p>
+      <ul id="codex-list"></ul>
+      <p class="codex-sub journal-head" id="journal-sub"></p>
+      <ul id="journal-list"></ul>
+      <button id="codex-close">close the codex</button>
+    </div>
+
+    <div id="intro-panel" class="hidden">
+      <p class="intro-kicker">from the desk of the guild of cartographers</p>
+      <h2 id="intro-h2">Expedition Nº <span id="intro-no">1</span></h2>
+      <p id="intro-mode" class="intro-mode" hidden></p>
+      <div id="intro-first">
+        <p class="intro-letter">Cartographer — chart this island, and light the beacon on its summit before the satchel runs empty. That is the whole of the work.</p>
+        <p class="intro-letter">A year ago, Expedition Nº 6 went into these waters and did not come back. Watch for their cairns. Read what the stones kept.</p>
+        <p class="intro-teach">click a hex beside you to walk — the rest is whispered as you go</p>
+      </div>
+      <p id="intro-standing" class="intro-letter" hidden>The standing orders hold — walk, chart, light the beacon, learn what the island consents to teach. Nº 6's trail is still out there.</p>
+      <p id="intro-daily-note" class="intro-letter intro-caution" hidden>The clerk notes: your first island still waits uncharted. The daily is a sterner commission, and the guild grants a single attempt — it will keep until you've found your feet.</p>
+      <div class="intro-commission">
+        <b>this expedition's commission</b>
+        <ul id="intro-commission"></ul>
+        <p>each clause sealed multiplies your score. mind the weather — it has plans of its own.</p>
+      </div>
+      <button id="btn-begin">break the seal — begin</button>
+    </div>
+
+    <div id="end-panel" class="hidden">
+      <h2 id="end-title">The expedition ends</h2>
+      <p id="end-flavor"></p>
+      <ul id="end-tally"></ul>
+      <div id="end-buttons">
+        <button id="btn-new">new expedition</button>
+        <button id="btn-retry">chart this island again</button>
+        <button id="btn-share">copy the report</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
