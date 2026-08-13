@@ -500,6 +500,7 @@ function newRun(sameSeed: boolean) {
   if (!sameSeed) seed = (Date.now() ^ (Math.random() * 0x7fffffff)) | 0;
   cancelAutoWalk();
   dailyMode = false;
+  resetNewGameBtn();
   ghostTrailThisRun = false;
   hud.dailyLabel = null;
   run = createRun(seed);
@@ -539,6 +540,7 @@ function dailyRecord(): { date: string; score: number; won: boolean; day: number
 function startDaily() {
   cancelAutoWalk();
   dailyMode = true;
+  resetNewGameBtn();
   ghostTrailThisRun = false;
   seed = dailySeed(todayStr());
   // a fixed mid-campaign commission (three clauses), the same for every cartographer
@@ -568,6 +570,33 @@ sound.onMuteChange = soundLabel;
 soundBtn.addEventListener('click', () => {
   sound.ensure();
   sound.setMuted(!sound.isMuted);
+});
+
+/* ---------------- a fresh chart, mid-run ---------------- */
+
+// one click asks, a second within a few breaths abandons; the daily hides it —
+// its single attempt is not for walking away from
+const newGameBtn = document.getElementById('newgame-btn')!;
+let newGameArm = 0;
+
+function resetNewGameBtn() {
+  window.clearTimeout(newGameArm);
+  newGameArm = 0;
+  newGameBtn.classList.remove('armed');
+  newGameBtn.textContent = '✎ new expedition';
+  newGameBtn.hidden = dailyMode;
+}
+
+newGameBtn.addEventListener('click', () => {
+  sound.ensure();
+  if (newGameArm) {
+    resetNewGameBtn();
+    newRun(false);
+    return;
+  }
+  newGameBtn.classList.add('armed');
+  newGameBtn.textContent = 'abandon this chart?';
+  newGameArm = window.setTimeout(resetNewGameBtn, 3600);
 });
 
 /* ---------------- boot & loop ---------------- */

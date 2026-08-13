@@ -32,7 +32,10 @@ Primer visibility pass (same day): the whisper becomes a proper note while it
 teaches (15.5px, bordered, red underline, pop-in on step change; ordinary hints
 stay quiet) · cards rest 24px higher so name + blurb read without hover · the
 pointed card rises fully out of the fan (lift yields to hover/selection) · the
-pencil ring is wax-red, thicker, wider breath.
+pencil ring is wax-red, thicker, wider breath. A "✎ new expedition" button now
+sits under the sound toggle — one click asks "abandon this chart?", a second
+within 3.6s begins anew; the daily hides it (its one attempt is not for walking
+away from).
 
 **Known gaps:** balance is feel-tested, not field-tested — no defeat has ever been
 witnessed; mobile/touch untested and all hover-taught information (route previews,

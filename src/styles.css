@@ -111,12 +111,14 @@ body.arriving #hint,body.arriving #toasts,body.arriving #mnotes{opacity:0;pointe
 #title{position:absolute;top:14px;right:22px;text-align:right;display:flex;flex-direction:column;align-items:flex-end}
 #title h1{font-size:25px;letter-spacing:.14em;color:#3f2f1c}
 #title p{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#6b5a3e;margin-top:2px}
-#codex-btn,#sound-btn{margin-top:9px;font-size:12px;letter-spacing:.06em;color:#5a4632;
+#codex-btn,#sound-btn,#newgame-btn{margin-top:9px;font-size:12px;letter-spacing:.06em;color:#5a4632;
   background:linear-gradient(168deg,rgba(246,236,209,.92),rgba(233,220,190,.9));
   border:1px solid rgba(90,70,40,.45);border-radius:3px;padding:5px 11px;
   box-shadow:0 2px 4px rgba(60,40,20,.18)}
-#codex-btn:hover,#sound-btn:hover{background:#f2e6c4}
-#sound-btn{margin-top:7px;font-size:11px;opacity:.85}
+#codex-btn:hover,#sound-btn:hover,#newgame-btn:hover{background:#f2e6c4}
+#sound-btn,#newgame-btn{margin-top:7px;font-size:11px;opacity:.85}
+/* the abandon question: one click asks, a second answers */
+#newgame-btn.armed{color:#8c2f22;border-color:rgba(140,47,34,.6);opacity:1}
 #codex-btn.glow{animation:codexglow 1.6s 3}
 @keyframes codexglow{50%{box-shadow:0 0 12px rgba(140,47,34,.7);border-color:#8c2f22}}
 #stamp{margin-top:12px;padding:5px 9px;border:1.5px solid rgba(140,47,34,.55);color:rgba(140,47,34,.62);
