@@ -59,6 +59,9 @@ export class Hud {
   private deckFlash = false;
   private pendingDeal = 0;
 
+  /** the codex has ever had something in it — laws or journal pages */
+  private codexEverMarked = loadCodex().size > 0 || fragmentsRead() > 0;
+
   constructor() {
     this.codexBtn.addEventListener('click', () => {
       this.fillCodex();
@@ -160,7 +163,25 @@ export class Hud {
     el.classList.add('flash');
   }
 
+  /** a chip or button asleep until the island first makes it matter */
+  private dormant(el: HTMLElement, sleep: boolean) {
+    const was = el.classList.contains('dormant');
+    el.classList.toggle('dormant', sleep);
+    if (was && !sleep) this.flash(el);
+  }
+
   update(s: RunState) {
+    // a first commission wakes the interface a piece at a time; every later
+    // expedition (and the daily) starts with the full ledger
+    const staged = s.expeditionNo === 1 && !this.dailyLabel;
+    let burning = false;
+    if (staged && s.weather === 'calm' && s.windStrong === 0) {
+      for (const t of s.world.tiles.values()) if (t.burning) { burning = true; break; }
+    }
+    this.dormant(this.chipScore, staged && s.score === 0);
+    this.dormant(this.chipWind, staged && s.weather === 'calm' && s.windStrong === 0 && !burning);
+    this.dormant(this.codexBtn as HTMLElement, staged && !this.codexEverMarked);
+
     this.chipDay.textContent = `Day ${s.day}${WEATHER_LABEL[s.weather] ?? ''}`;
     this.suppliesN.textContent = String(s.supplies);
     this.suppliesExtra.textContent = s.freeSteps > 0 ? `+${s.freeSteps} free` : '';
@@ -400,6 +421,7 @@ export class Hud {
   }
 
   codexGlow() {
+    this.codexEverMarked = true; // the button may wake now, if it was sleeping
     this.codexBtn.classList.add('glow');
   }
 

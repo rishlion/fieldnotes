@@ -83,6 +83,8 @@ body.arriving #hint,body.arriving #toasts,body.arriving #mnotes{opacity:0;pointe
 .chip i{font-size:11px;color:#8c2f22;font-style:italic}
 #chip-day{font-style:italic}
 .chip.flash{animation:chipflash .5s}
+/* asleep until the island first makes it matter (first expedition only) */
+.dormant{display:none !important}
 @keyframes chipflash{30%{background:#f8ecc0;transform:scale(1.09)}}
 .chip.low{border-color:#8c2f22;color:#8c2f22;animation:lowpulse 1.6s infinite}
 .chip.low svg{color:#8c2f22}

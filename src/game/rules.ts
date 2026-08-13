@@ -208,6 +208,10 @@ function planDir(s: RunState, day: number): number {
 function tick(s: RunState, ev: GameEvent[]) {
   s.day++;
 
+  // a first commission's satchel deals itself out over the opening days,
+  // restoring the cards createRun held back from the two-card start
+  if (s.expeditionNo === 1 && s.day >= 2 && s.day <= 4) drawCards(s, 1, ev);
+
   const np = phaseFor(s.day, s.sched);
   if (np !== s.weather) applyWeather(s, np, ev);
   if (s.weather === 'storm') stormBlooms(s, ev);

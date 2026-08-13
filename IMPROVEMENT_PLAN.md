@@ -35,7 +35,14 @@ pointed card rises fully out of the fan (lift yields to hover/selection) · the
 pencil ring is wax-red, thicker, wider breath. A "✎ new expedition" button now
 sits under the sound toggle — one click asks "abandon this chart?", a second
 within 3.6s begins anew; the daily hides it (its one attempt is not for walking
-away from).
+away from). **The staged first expedition (2026-08-13)**: day 1 opens with three
+chips (day/supplies/charted), the commission, and just Survey + Frost in hand;
+the score chip wakes with the first coin, wind with the first weather stir or
+fire, the codex button with the first law, the new-expedition button from exp 2,
+and the other three cards deal back one per day over days 2–4. Later expeditions
+and the daily are untouched (full ledger and hand). Verified live: all reveals
+fire at their moments, daily unaffected, balance invariant untouched (same
+twelve cards, zero-card winnable unchanged).
 
 **Known gaps:** balance is feel-tested, not field-tested — no defeat has ever been
 witnessed; mobile/touch untested and all hover-taught information (route previews,

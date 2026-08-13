@@ -100,6 +100,12 @@ export function createRun(
       deck[di] = hand[hi];
       hand[hi] = want;
     }
+    // the satchel opens slowly on a first commission: two cards to start — the
+    // two the primer teaches — and the rest dealt back a day at a time (tick)
+    const keep = new Set([hand.indexOf('survey'), hand.indexOf('frost')]);
+    for (let i = hand.length - 1; i >= 0; i--) {
+      if (!keep.has(i)) deck.push(...hand.splice(i, 1));
+    }
   }
 
   let landHexes = 0;

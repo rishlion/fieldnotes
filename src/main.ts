@@ -575,7 +575,8 @@ soundBtn.addEventListener('click', () => {
 /* ---------------- a fresh chart, mid-run ---------------- */
 
 // one click asks, a second within a few breaths abandons; the daily hides it —
-// its single attempt is not for walking away from
+// its single attempt is not for walking away from — and so does the first
+// expedition, where the primer is teaching and the lever would only add noise
 const newGameBtn = document.getElementById('newgame-btn')!;
 let newGameArm = 0;
 
@@ -584,7 +585,7 @@ function resetNewGameBtn() {
   newGameArm = 0;
   newGameBtn.classList.remove('armed');
   newGameBtn.textContent = '✎ new expedition';
-  newGameBtn.hidden = dailyMode;
+  newGameBtn.hidden = dailyMode || state.expeditionNo === 1;
 }
 
 newGameBtn.addEventListener('click', () => {
@@ -598,6 +599,7 @@ newGameBtn.addEventListener('click', () => {
   newGameBtn.textContent = 'abandon this chart?';
   newGameArm = window.setTimeout(resetNewGameBtn, 3600);
 });
+resetNewGameBtn(); // the boot run may itself be a first expedition
 
 /* ---------------- boot & loop ---------------- */
 

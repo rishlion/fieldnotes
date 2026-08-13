@@ -87,6 +87,13 @@ assets. Palette anchored on parchment (#e9dcbe), sepia ink (#4a3826), wax red (#
   one safety net ("click a hex beside you to walk — the rest is whispered as you
   go") — plus the commission. The old four-verb instruction list is gone; the
   primer teaches those verbs in play.
+- **The staged first expedition**: concepts arrive one at a time. The interface
+  wakes as the island makes each piece matter — the score chip with the first
+  coin, the wind chip with the first weather stir (or fire), the codex button
+  with the first law, the new-expedition button from expedition 2 — and the
+  satchel opens slowly: Survey and Frost in hand on day 1 (the primer's two),
+  the other three dealt back one per day over days 2–4 (`tick` in rules.ts).
+  Every later expedition and the daily start with the full ledger and hand.
 - **The primer** (playable tutorial, first expedition only): eight gated whisper
   steps that point at the exact thing to do — a pencil ring on the hex to walk, a
   glowing card to play (Survey, then Frost at the water's edge, which fires a real
