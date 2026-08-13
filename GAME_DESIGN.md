@@ -94,6 +94,12 @@ assets. Palette anchored on parchment (#e9dcbe), sepia ink (#4a3826), wax red (#
   satchel opens slowly: Survey and Frost in hand on day 1 (the primer's two),
   the other three dealt back one per day over days 2–4 (`tick` in rules.ts).
   Every later expedition and the daily start with the full ledger and hand.
+- **The objective, seen not read**: the uncharted summit is a true landmark — a
+  breathing pencil sketch with an unlit brazier, "the beacon waits", clamped to
+  the page edge with a chevron when out of frame. On expedition 1 the seal-break
+  triggers the opening glance: the camera eases out for 3.6s so landing and
+  summit share the frame, with one moment banner ("Dark since Nº 6. That is
+  where you are going."). The Journey move: the mountain is always on the horizon.
 - **The primer** (playable tutorial, first expedition only): eight gated whisper
   steps that point at the exact thing to do — a pencil ring on the hex to walk, a
   glowing card to play (Survey, then Frost at the water's edge, which fires a real

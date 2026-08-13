@@ -42,7 +42,12 @@ fire, the codex button with the first law, the new-expedition button from exp 2,
 and the other three cards deal back one per day over days 2–4. Later expeditions
 and the daily are untouched (full ledger and hand). Verified live: all reveals
 fire at their moments, daily unaffected, balance invariant untouched (same
-twelve cards, zero-card winnable unchanged).
+twelve cards, zero-card winnable unchanged). **The objective made visible
+(2026-08-13)**: the summit rumour is now a real landmark (darker breathing
+strokes, an unlit brazier inked at the top, scale floor 15) and expedition 1's
+seal-break triggers the opening glance — camera eases out 3.6s to frame landing
+and summit together, one moment banner names the goal. Verified: target scale
+46 → 24 → 46, banner plays, sketch reads at the page edge.
 
 **Known gaps:** balance is feel-tested, not field-tested — no defeat has ever been
 witnessed; mobile/touch untested and all hover-taught information (route previews,

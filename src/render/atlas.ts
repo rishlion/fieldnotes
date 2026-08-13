@@ -137,6 +137,13 @@ export class AtlasRenderer {
   private availW() { return Math.max(120, this.CW - 130); }
   private availH() { return Math.max(90, this.CH - 96 - 216); }
 
+  /** the opening glance: until this stamp, the far summit shares the frame */
+  private glanceUntil = 0;
+
+  glanceAtPeak(ms: number) {
+    this.glanceUntil = performance.now() + ms;
+  }
+
   /**
    * Where the camera wants to be: fit the charted region (plus the player)
    * while exploring, or the whole landmass once the expedition is over.
@@ -172,6 +179,8 @@ export class AtlasRenderer {
       include(s.player.q, s.player.r);
       // card targets can sit on uncharted water — never let the hand hide them
       for (const t of this.targets) include(t.q, t.r);
+      // the opening glance: the whole journey seen once, landing to summit
+      if (performance.now() < this.glanceUntil) include(s.world.peak.q, s.world.peak.r);
     }
     if (minX === Infinity) return;
 
@@ -711,7 +720,7 @@ export class AtlasRenderer {
     if (!this.chartVeiled) {
       this.drawFrontier(g);
     }
-    this.drawRumor(g);
+    this.drawRumor(g, now);
     this.drawCairnRumors(g);
     this.drawSettles(g, now);
     this.drawGhostTrail(g);
@@ -947,21 +956,24 @@ export class AtlasRenderer {
     g.restore();
   }
 
-  /** faint sketch of the far peak until it is charted; clamps to the page edge when out of view */
-  private drawRumor(g: CanvasRenderingContext2D) {
+  /** the far peak until it is charted: a real landmark — the objective, always
+      in sight — that clamps to the page edge when out of view */
+  private drawRumor(g: CanvasRenderingContext2D, now: number) {
     const s = this.state;
     const peakTile = tileAt(s, s.world.peak);
     if (peakTile?.charted) return;
     const c = this.center(s.world.peak);
-    const S = Math.min(26, this.S);
+    const S = Math.max(15, Math.min(26, this.S));
     const x0 = 70, x1 = this.CW - 70, y0 = 96, y1 = this.CH - 240;
     const off = c.x < x0 || c.x > x1 || c.y < y0 || c.y > y1;
     const cx = Math.max(x0, Math.min(x1, c.x));
     const cy = Math.max(y0, Math.min(y1, c.y));
 
+    // a slow ink breath, so the eye finds the mountain without being shouted at
+    const breath = 0.5 + 0.5 * Math.sin(now / 650);
     g.save();
-    g.strokeStyle = 'rgba(90,70,45,.3)';
-    g.lineWidth = 1.4;
+    g.strokeStyle = `rgba(90,70,45,${0.42 + 0.16 * breath})`;
+    g.lineWidth = 1.7;
     g.lineCap = 'round';
     g.setLineDash([3, 4]);
     const k = off ? 0.62 : 1;
@@ -973,7 +985,16 @@ export class AtlasRenderer {
     g.lineTo(cx + S * 1.6 * k, cy + S * 0.9 * k);
     g.stroke();
     g.setLineDash([]);
-    g.fillStyle = 'rgba(90,70,45,.42)';
+    // the unlit beacon: a small brazier inked on the summit, waiting
+    const bx = cx + S * 0.5 * k, by = cy - S * 1.1 * k;
+    g.beginPath();
+    g.moveTo(bx, by);
+    g.lineTo(bx, by - S * 0.3 * k);
+    g.stroke();
+    g.beginPath();
+    g.arc(bx, by - S * 0.42 * k, S * 0.19 * k, 0, Math.PI);
+    g.stroke();
+    g.fillStyle = 'rgba(90,70,45,.6)';
     g.font = `italic ${Math.max(11, Math.min(14.5, Math.round(S * 0.44)))}px "Iowan Old Style",Palatino,serif`;
     g.textAlign = 'center';
     g.fillText(off ? 'the beacon waits, beyond' : 'the beacon waits', cx, cy + S * 1.35 * k + 8);

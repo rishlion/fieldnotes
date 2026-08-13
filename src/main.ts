@@ -610,6 +610,12 @@ window.addEventListener('resize', () => {
 
 hud.onBegin = () => {
   sound.ensure(); // breaking the seal is the user gesture that wakes the audio
+  // the opening glance: on a first commission the camera eases out so landing
+  // and summit share the frame — the whole journey seen once, before a step
+  if (state.expeditionNo === 1) {
+    renderer.glanceAtPeak(3600);
+    hud.moment('the beacon', 'Dark since Nº 6. That is where you are going.');
+  }
   const whisper = updateOnboarding();
   hud.hint(whisper ?? 'the guild asks two things: chart the island, and light the beacon on its summit', whisper !== null);
   if (state.ledgerCairn) {
