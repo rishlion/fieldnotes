@@ -173,19 +173,21 @@ body.arriving #hint,body.arriving #toasts,body.arriving #mnotes{opacity:0;pointe
   background:linear-gradient(160deg,#efe3c6,#e2d2a9);border:1px solid #b39c6f;color:#45361c;
   box-shadow:0 4px 10px rgba(50,35,15,.35), inset 0 0 0 3px rgba(255,250,235,.5), inset 0 0 0 4px rgba(139,115,74,.35);
   transition:transform .22s cubic-bezier(.2,.9,.3,1.4), box-shadow .22s;
-  transform:translateY(54px) rotate(var(--rot,0deg));transform-origin:50% 120%}
+  transform:translateY(30px) rotate(var(--rot,0deg));transform-origin:50% 120%}
 .card:hover{transform:translateY(-12px) rotate(0deg) scale(1.05);z-index:5}
 .card.sel{transform:translateY(-22px) rotate(0deg) scale(1.08);z-index:6;
   box-shadow:0 8px 18px rgba(50,35,15,.45), 0 0 0 2px #8c2f22, inset 0 0 0 3px rgba(255,250,235,.5)}
 .card svg{width:40px;height:40px;margin:6px 0 5px;color:#5a4327}
 .card.hot svg{color:#a4471f}
 .card .nm{font-size:14.5px;font-weight:700;letter-spacing:.04em}
-.card .fx{font-size:10.4px;line-height:1.32;text-align:center;margin-top:6px;opacity:.8}
+.card .fx{font-size:10.4px;line-height:1.32;text-align:center;margin-top:6px;opacity:.9}
 .card.dealt{animation:dealIn .5s cubic-bezier(.2,.9,.3,1.15)}
 @keyframes dealIn{from{opacity:0;transform:translateY(150px) rotate(9deg)}}
-/* the primer points at a card: a slow wax-red breath (filter only — never fights hover) */
+/* the primer points at a card: risen from the fan, with a slow wax-red breath
+   (the lift steps aside for hover and selection — it never fights them) */
 .card.tut{animation:tutGlow 1.7s ease-in-out infinite}
-@keyframes tutGlow{0%,100%{filter:none}50%{filter:drop-shadow(0 0 8px rgba(161,48,35,.75))}}
+.card.tut:not(:hover):not(.sel){transform:translateY(0) rotate(var(--rot,0deg));z-index:4}
+@keyframes tutGlow{0%,100%{filter:drop-shadow(0 0 3px rgba(161,48,35,.35))}50%{filter:drop-shadow(0 0 11px rgba(161,48,35,.85))}}
 .card.gone{animation:cardGone .4s forwards;pointer-events:none}
 @keyframes cardGone{to{opacity:0;transform:translateY(-60px) rotate(8deg) scale(.7)}}
 
@@ -211,6 +213,13 @@ body.arriving #hint,body.arriving #toasts,body.arriving #mnotes{opacity:0;pointe
   background:rgba(238,226,197,.8);border-radius:3px;
   border-bottom:1px dashed rgba(90,70,45,.5)}
 #hint.show{opacity:1}
+/* the primer speaks up: the whisper becomes a proper note while it teaches */
+#hint.primer{font-size:15.5px;color:#3f2f1c;padding:9px 22px 10px;
+  background:rgba(243,232,205,.97);border:1px solid rgba(90,70,45,.35);
+  border-bottom:2px solid rgba(140,47,34,.55);border-radius:4px;
+  box-shadow:0 4px 14px rgba(50,35,15,.28)}
+#hint.pop{animation:whisperIn .5s cubic-bezier(.2,.9,.3,1.25)}
+@keyframes whisperIn{from{opacity:0;transform:translateX(-50%) rotate(-.4deg) translateY(14px)}}
 #hint .skip{margin-left:10px;font-size:10.5px;line-height:1;font-style:normal;color:#8a7550;
   background:none;border:1px solid rgba(90,70,45,.4);border-radius:3px;padding:2px 6px 3px;vertical-align:1px}
 #hint .skip:hover{color:#8c2f22;border-color:#8c2f22}

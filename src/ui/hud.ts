@@ -406,8 +406,13 @@ export class Hud {
   /** called when the player waves the primer away */
   onHintDismiss: () => void = () => {};
 
+  /** the last hint spoken — a new whisper announces itself, a repeated one stays quiet */
+  private lastHint: string | null = null;
+
   hint(text: string | null, dismissable = false) {
     if (text) {
+      const changed = text !== this.lastHint;
+      this.lastHint = text;
       this.hintEl.textContent = text;
       if (dismissable) {
         const skip = document.createElement('button');
@@ -417,9 +422,16 @@ export class Hud {
         skip.addEventListener('click', () => this.onHintDismiss());
         this.hintEl.appendChild(skip);
       }
+      this.hintEl.classList.toggle('primer', dismissable);
       this.hintEl.classList.add('show');
+      if (changed && dismissable) {
+        this.hintEl.classList.remove('pop');
+        void this.hintEl.offsetWidth;
+        this.hintEl.classList.add('pop');
+      }
     } else {
-      this.hintEl.classList.remove('show');
+      this.lastHint = null;
+      this.hintEl.classList.remove('show', 'primer', 'pop');
     }
   }
 

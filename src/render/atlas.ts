@@ -1109,11 +1109,11 @@ export class AtlasRenderer {
     const c = this.center(this.tutHex);
     const pulse = 0.5 + Math.sin(now / 320) * 0.5;
     g.save();
-    g.setLineDash([4, 4]);
-    g.lineWidth = 2;
-    g.strokeStyle = `rgba(74,56,38,${0.35 + 0.4 * pulse})`;
+    g.setLineDash([5, 4]);
+    g.lineWidth = 2.5;
+    g.strokeStyle = `rgba(140,47,34,${0.55 + 0.35 * pulse})`;
     g.beginPath();
-    g.arc(c.x, c.y, this.S * (0.56 + 0.05 * pulse), 0, 7);
+    g.arc(c.x, c.y, this.S * (0.58 + 0.07 * pulse), 0, 7);
     g.stroke();
     g.restore();
   }

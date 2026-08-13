@@ -28,6 +28,11 @@ four-verb instruction list is gone; the primer teaches those verbs in play, with
 a new chart whisper after the first step (`fieldnotes.onboard.v3` — indices
 shifted). Returning letters unchanged. Verified fresh in-browser: letter reads in
 seconds, whispers sequence walk → chart → supplies → survey, daily letter intact.
+Primer visibility pass (same day): the whisper becomes a proper note while it
+teaches (15.5px, bordered, red underline, pop-in on step change; ordinary hints
+stay quiet) · cards rest 24px higher so name + blurb read without hover · the
+pointed card rises fully out of the fan (lift yields to hover/selection) · the
+pencil ring is wax-red, thicker, wider breath.
 
 **Known gaps:** balance is feel-tested, not field-tested — no defeat has ever been
 witnessed; mobile/touch untested and all hover-taught information (route previews,
